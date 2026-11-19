@@ -8,6 +8,8 @@ dist/
 out/
 .testtmp/
 .smoke/
+pmocr-tests/
+repotest/
 .tmp-*
 
 # 机器相关配置（含绝对路径），不要提交

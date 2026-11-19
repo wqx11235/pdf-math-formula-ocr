@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import os
+import tempfile
 import uuid
 from pathlib import Path
 
@@ -11,9 +12,31 @@ from PIL import Image
 
 from pmocr.latex import RenderResult
 
-# 沙箱下系统 temp 目录不可写，测试临时目录固定在仓库内（.gitignore 已排除）。
-# 注意不能用 tempfile.mkdtemp：它创建 0700 目录，受限令牌下后续写入会被拒。
-TEST_TMP_ROOT = Path(os.environ.get("PMOCR_TEST_TMP", ".testtmp"))
+
+def _pick_root() -> Path:
+    """测试临时目录：系统 temp 优先，不可写就退回仓库内；PMOCR_TEST_TMP 可覆盖。
+
+    不用 tempfile.mkdtemp：它建 0700 目录，受限令牌下后续写入会被拒。
+    gettempdir() 在某些受限环境会返回空串，必须用绝对路径兜底，否则会在仓库里造目录。
+    """
+    override = os.environ.get("PMOCR_TEST_TMP")
+    if override:
+        return Path(override)
+    base = tempfile.gettempdir()
+    if base and Path(base).is_absolute():
+        candidate = Path(base).resolve() / "pmocr-tests"
+        try:
+            candidate.mkdir(parents=True, exist_ok=True)
+            probe = candidate / ".probe"
+            probe.write_text("ok", encoding="utf-8")
+            probe.unlink()
+            return candidate
+        except OSError:
+            pass
+    return Path(".testtmp")
+
+
+TEST_TMP_ROOT = _pick_root()
 
 
 def make_tmp() -> Path:
