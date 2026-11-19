@@ -68,6 +68,22 @@ A two-stage pipeline: full-page parsing for structure and text, then per-block r
 | 版面模型 | models\PP-DocLayoutV3_infer | 手工解压，约 130MB |
 | TeX | <TeX 安装目录> | xelatex + standalone，渲染公式用 |
 
+### 前置检查（三样）
+
+    # 1) Python 3.12，且能建虚拟环境
+    python -c "import sys; print(sys.version)"
+
+    # 2) TeX：必须有 xelatex + standalone + amsmath
+    xelatex --version
+    kpsewhich standalone.cls
+    kpsewhich amsmath.sty
+
+    # 3) 显卡：8 GB 及以上，nvidia-smi 能列出来
+    nvidia-smi --query-gpu=name,memory.total --format=csv
+
+TeX 没装的话，装 TeX Live（Windows：texlive 官方 iso 或 scoop），
+只要 basic scheme + latex-extra 就够；或用 MiKTeX 勾选 standalone。
+
 ### 从零装一遍（顺序别乱）
 
 **1) 拉模型（ModelScope，国内直连）**
@@ -82,6 +98,12 @@ A two-stage pipeline: full-page parsing for structure and text, then per-block r
 **2) Ollama 用解压版**（安装器会写注册表被拒，别浪费时间）
 
 下 ollama-windows-amd64.zip（v0.40.16 实测可用），解压到 <OCR_ROOT>\..\ollama-app。
+
+    curl.exe -L -o ollama.zip https://github.com/ollama/ollama/releases/download/v0.40.16/ollama-windows-amd64.zip
+    tar -xf ollama.zip -C <OCR_ROOT>\..\ollama-app
+
+GitHub 直连慢的话用 gh-proxy 前缀，或者换 0.40.x 里任意一个版本（只要 >= 0.40.12）。
+
 然后在 gguf 所在目录，用 Modelfile 导入：
 
     $env:USERPROFILE  = '<OCR_ROOT>\home'
@@ -90,7 +112,7 @@ A two-stage pipeline: full-page parsing for structure and text, then per-block r
     <OCR_ROOT>\..\ollama-app\ollama.exe create minicpm-ocr -f .\Modelfile
     <OCR_ROOT>\..\ollama-app\ollama.exe create jev -f .\jev\Modelfile
 
-Modelfile 内容：
+Modelfile 内容（主模型，存成 OCR\Modelfile）：
 
     FROM ./MiniCPM-OCR-1_0-Q8_0.gguf
     FROM ./mmproj-model-f16-4x.gguf
@@ -98,7 +120,19 @@ Modelfile 内容：
     PARAMETER num_ctx 8192
     PARAMETER temperature 0
 
-Jev 的 Modelfile 只要前两行（FROM 主模型 + FROM mmproj）。
+Jev 的 Modelfile（存成 jev\Modelfile）：
+
+    FROM ./jev-q8.gguf
+    FROM ./jev-mmproj.gguf
+    PARAMETER num_ctx 8192
+    PARAMETER temperature 0
+
+注意 Ollama 的 create 必须在 ollama-app 目录下跑（Workdir），
+不然会报 could not locate ollama app：
+
+    cd <OCR_ROOT>\..\ollama-app
+    .\ollama.exe create minicpm-ocr -f D:\path\to\Modelfile
+    .\ollama.exe create jev -f D:\path\to\jev\Modelfile
 
 **3) Python SDK**
 
@@ -108,7 +142,30 @@ Jev 的 Modelfile 只要前两行（FROM 主模型 + FROM mmproj）。
 **4) 版面模型**
 
     curl.exe -L -o PP-DocLayoutV3_infer.tar 'https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-DocLayoutV3_infer.tar'
+    New-Item -ItemType Directory -Force models\PP-DocLayoutV3_infer | Out-Null
     tar -xf PP-DocLayoutV3_infer.tar -C models
+
+解压前先建目录，避免运行时的权限坑（见坑 3）。
+
+### 装完自检（四条，全绿再往下）
+
+    # 1) 服务在线
+    curl.exe -s http://127.0.0.1:18499/api/version
+    # 期望: {"version":"0.40.x"}
+
+    # 2) 两个模型都在
+    curl.exe -s http://127.0.0.1:18499/api/tags
+    # 期望: minicpm-ocr:latest 和 jev:latest
+
+    # 3) SDK 能起来
+    .\venv312\Scripts\python.exe -m minicpmvocr list-backends
+    # 期望: 打印引擎和版面 provider 列表
+
+    # 4) xelatex 能编一个公式
+    echo '$\frac{1}{1-z}=1+z+\cdots$' > t.tex
+    # 前后补上 documentclass 和 begin/end document 再编译
+    xelatex -interaction=nonstopmode t.tex
+    # 期望: Output written on t.pdf
 
 ---
 
@@ -116,7 +173,7 @@ Jev 的 Modelfile 只要前两行（FROM 主模型 + FROM mmproj）。
 
 ### 第一步：整页解析
 
-    cd '<书目录>\GTM\公式OCR'
+    cd <脚本所在目录>
     .\ocr_parse.ps1 -Input 'C:\path\to\扫描目录' -Out 'D:\工作\out'
 
 产物：
@@ -127,7 +184,7 @@ Jev 的 Modelfile 只要前两行（FROM 主模型 + FROM mmproj）。
 ### 第二步：公式复核
 
     $py = '<OCR_ROOT>\venv312\Scripts\python.exe'
-    & $py '<书目录>\GTM\公式OCR\formula_qc.py' --pages <最新>\pages_json --images <扫描目录> --out <复核目录> --threshold 0.6
+    & $py <脚本所在目录>\formula_qc.py --pages <最新>\pages_json --images <扫描目录> --out <复核目录> --threshold 0.6
 
 产物：
 
