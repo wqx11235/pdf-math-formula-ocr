@@ -1,0 +1,230 @@
+﻿page,block,bbox,score,verdict,tex,note
+p-10,1,"[1192, 4206, 3824, 4595]",0.9587,OK,"\frac{1}{1-z}=1+z+z^{1+1}+z^{1+1+1}+\cdots,",
+p-10,2,"[1160, 4631, 3870, 5025]",0.9593,OK,"\frac{1}{1-z^{2}}=1+z^{2}+z^{2+2}+z^{2+2+2}+\cdots,",
+p-10,3,"[1160, 5055, 3864, 5416]",0.9415,OK,"\frac{1}{1-z^{3}}=1+z^{3}+z^{3+3}+z^{3+3+3}+\cdots,",
+p-10,4,"[947, 5730, 4095, 6625]",0.8885,OK,\begin{array}{l} \frac{1}{(1-z)(1-z^{2})(1-z^{3})} \\ = (1+z+z^{1+1}+\cdots)(1+z^{2}+z^{2+2}+\cdots) \\ \times (1+z^{3}+z^{3+3}+\cdots). \end{array},
+p-11,1,"[1182, 2116, 3816, 2488]",0.9824,OK,"\sum C(n)z^{n}=\frac{1}{(1-z)(1-z^{2})(1-z^{3})},",
+p-11,2,"[526, 6038, 4530, 6883]",0.9713,OK,\begin{array}{l} \frac{1}{(1-z)(1-z^{2})(1-z^{3})} \\ = \frac{1}{6} \frac{1}{(1-z)^{3}} + \frac{1}{4} \frac{1}{(1-z)^{2}} + \frac{1}{4} \frac{1}{(1-z^{2})} + \frac{1}{3} \frac{1}{(1-z^{3})}. \end{array},
+p-11,3,"[806, 7304, 4236, 7706]",0.9863,OK,\frac{1}{(1-z)^{2}}=\frac{d}{dz}\frac{1}{1-z}=\frac{d}{dz}\sum z^{n}=\sum(n+1)z^{n},
+p-12,1,"[634, 880, 3679, 1677]",0.9719,OK,"\begin{array}{l} \frac{1}{(1 - z)^{3}} = \frac{d}{d z} \frac{1}{2 (1 - z)^{2}} = \frac{d}{d z} \sum \frac{n + 1}{2} z^{n} \\ = \sum \frac{(n + 2) (n + 1)}{2} z^{n}, \\ \end{array}",
+p-12,2,"[874, 1738, 4373, 2118]",0.9824,OK,C(n)=\frac{(n+2)(n+1)}{12}+\frac{n+1}{4}+\frac{\chi_{1}(n)}{4}+\frac{\chi_{2}(n)}{3},
+p-12,3,"[1628, 2839, 3364, 3348]",0.9819,OK,C(n)=\left[\frac{n^{2}}{12}+\frac{n}{2}+1\right];,
+p-12,4,"[964, 6660, 4046, 7028]",0.985,OK,\sum C(n)z^{n}=\frac{1}{(1-z^{a_{1}})(1-z^{a_{2}})\cdots(1-z^{a_{k}})}.,
+p-13,1,"[1839, 2307, 3158, 2722]",,SCORE_ERR,C(n)\sim c\frac{n^{k-1}}{(k-1)!}.,HTTP Error 500: Internal Server Error
+p-13,2,"[579, 3462, 4467, 3866]",,SCORE_ERR,"\frac{1}{(1-z^{a_{1}})(1-z^{a_{2}})\cdots(1-z^{a_{k}})}=\frac{c}{(1-z)^{k}}+\text{other terms},",HTTP Error 500: Internal Server Error
+p-13,3,"[576, 4230, 4448, 4623]",,SCORE_ERR,"\frac{1-z}{1-z^{a_{1}}}\frac{1-z}{1-z^{a_{2}}}\cdots\frac{1-z}{1-z^{a_{k}}}=c+(1-z)^{k}\times\text{other terms},",HTTP Error 500: Internal Server Error
+p-13,4,"[1543, 5402, 3460, 5830]",,SCORE_ERR,C(n)\sim\frac{n^{k-1}}{a_{1}a_{2}\cdots a_{k}(k-1)!}.,HTTP Error 500: Internal Server Error
+p-14,1,"[614, 936, 4402, 1655]",,SCORE_ERR,\begin{array}{l} (z + z^{2} + z^{3} + z^{4} + z^{5} + z^{6}) (z + z^{2} + z^{3} + z^{4} + z^{5} + z^{6}) \\ = z^{2} + 2 z^{3} + 3 z^{4} + 4 z^{5} + 5 z^{6} + 6 z^{7} \\ + 5 z^{8} + 4 z^{9} + 3 z^{10} + 2 z^{11} + z^{12} \\ \end{array},HTTP Error 500: Internal Server Error
+p-14,2,"[931, 3085, 4085, 3537]",0.9823,OK,\begin{array}{l} (z^{a_{1}} + \cdots + z^{a_{6}})(z^{b_{1}} + \cdots + z^{b_{6}}) \\ = z^{2} + 2 z^{3} + 3 z^{4} + \cdots + 3 z^{10} + 2 z^{11} + z^{12}. \end{array},
+p-14,3,"[1193, 4600, 3829, 5400]",,SCORE_ERR,\begin{array}{l} (z^{a_{1}} + \cdots + z^{a_{6}}) (z^{b_{1}} + \cdots + z^{b_{6}}) \\ = (z + z^{2} + z^{3} + z^{4} + z^{5} + z^{6}) \\ \times (z + z^{2} + z^{3} + z^{4} + z^{5} + z^{6})? \end{array},HTTP Error 500: Internal Server Error
+p-15,1,"[1057, 932, 3955, 1448]",,SCORE_ERR,\begin{array}{l} \sum z^{a} = z (1 + z + z^{2}) (1 + z) (1 - z + z^{2})^{2} \\ = z + z^{3} + z^{4} + z^{5} + z^{6} + z^{8} \end{array},HTTP Error 500: Internal Server Error
+p-15,2,"[732, 1873, 4258, 2127]",0.9793,OK,\sum z^{b}=z(1+z+z^{2})(1+z)=z+2z^{2}+2z^{3}+z^{4}.,
+p-15,3,"[1098, 3943, 3889, 4127]",0.9522,OK,"r(n)=\#\{(a,a^{\prime}):a,a^{\prime}\in A,n=a+a^{\prime}\};",
+p-15,4,"[804, 4599, 4182, 4793]",0.96,OK,"r_{+}(n)=\#\{(a,a^{\prime}):a,a^{\prime}\in A,a\leq a^{\prime},n=a+a^{\prime}\},",
+p-15,5,"[802, 5265, 4182, 5451]",0.9425,OK,"r_{-}(n)=\#\{(a,a^{\prime}):a,a^{\prime}\in A,a<a^{\prime},n=a+a^{\prime}\},",
+p-15,6,"[1831, 6468, 3168, 6741]",0.985,OK,\sum r(n)z^{n}=A^{2}(z).,
+p-15,7,"[1382, 7353, 3613, 7698]",0.9711,OK,\sum r_{-}(n)z^{n}=\frac{1}{2}[A^{2}(z)-A(z^{2})].,
+p-16,1,"[1385, 1095, 3616, 1443]",0.9536,OK,\sum r_{+}(n)z^{n}=\frac{1}{2}[A^{2}(z)+A(z^{2})].,
+p-16,2,"[1307, 4436, 3712, 4815]",0.9852,OK,"\frac{1}{2}[A^{2}(z)+A(z^{2})]=P(z)+\frac{C}{1-z},",
+p-17,1,"[1186, 2098, 3838, 2468]",0.9828,OK,\frac{1}{2}[A^{2}(z)-A(z^{2})]=\frac{1}{2}[B^{2}(z)-B(z^{2})].,
+p-17,2,"[1723, 3036, 3277, 3412]",0.9192,OK,A(z)+B(z)=\frac{1}{1-z}.,
+p-17,3,"[1410, 3799, 3586, 4004]",0.9679,OK,"A^{2}(z)-B^{2}(z)=A(z^{2})-B(z^{2}),",
+p-17,4,"[1134, 4428, 3856, 4804]",0.9792,OK,"[A(z)-B(z)]\cdot\frac{1}{1-z}=A(z^{2})-B(z^{2}),",
+p-17,5,"[1182, 5156, 3824, 5352]",0.9823,OK,A(z)-B(z)=(1-z)[A(z^{2})-B(z^{2})].,
+p-17,6,"[1096, 5779, 3906, 5991]",0.9795,OK,"A(z^{2})-B(z^{2})=(1-z^{2})[A(z^{4})-B(z^{4})],",
+p-17,7,"[925, 6431, 4084, 6623]",0.9672,OK,A(z)-B(z)=(1-z)(1-z^{2})[A(z^{4})-B(z^{4})].,
+p-17,8,"[379, 7018, 4605, 7328]",0.9532,OK,"A(z)-B(z)=(1-z)(1-z^{2})\cdots(1-z^{2^{n-1}})\left[A(z^{2^{n}})-B(z^{2^{n}})\right],",
+p-18,1,"[1554, 1083, 3443, 1521]",0.983,OK,A(z)-B(z)=\prod_{i=0}^{\infty}(1-z^{2^{i}}).,
+p-18,2,"[1761, 4401, 3235, 4771]",,SCORE_ERR,\overbrace{111\cdots 1}^{2k+1}=2^{2k+1}-1,HTTP Error 500: Internal Server Error
+p-19,1,"[1566, 5052, 3464, 5436]",,SCORE_ERR,\frac{1}{(1-z)(1-z^{3})(1-z^{5})\cdots}.,HTTP Error 500: Internal Server Error
+p-19,2,"[1566, 6537, 3454, 6739]",0.9556,OK,(1+z)(1+z^{2})(1+z^{3})\cdots.,
+p-19,3,"[598, 7100, 4405, 7685]",0.4334,CHECK,\begin{array}{c} \frac{1}{(1-z)(1-z^{3})(1-z^{5})\cdots}=(1+z)(1+z^{2})(1+z^{3})\cdots \\ \text{throughout }|z|<1. \end{array},
+p-20,1,"[461, 911, 4269, 1109]",0.9676,OK,(1-z)(1-z^{3})(1-z^{5})\cdots(1+z)(1+z^{2})(1+z^{3})\cdots=1,
+p-20,2,"[887, 2830, 4129, 3030]",0.9426,OK,(1-z^{2})(1-z^{6})(1-z^{10})\cdots(1+z^{2})(1+z^{4})\cdots,
+p-20,3,"[1004, 7162, 4008, 7678]",0.9717,OK,"A(z)\cdot A\left(\frac{1}{z}\right)=\sum_{\substack{i,j=1\\i>j}}^{n}z^{a_{i}-a_{j}}+n+\sum_{\substack{i,j=1\\i<j}}^{n}z^{a_{i}-a_{j}}.",
+p-21,1,"[959, 1386, 4044, 1825]",0.9559,OK,"A(z)\cdot A\left(\frac{1}{z}\right)=\sum_{k=-N}^{N}z^{k}+n-1, N=\binom{n}{2},",
+p-21,2,"[597, 2246, 4137, 2661]",0.9664,OK,"A(z)\cdot A(\frac{1}{z})=\frac{z^{N+1}-z^{-N}}{z-1}+n-1,\quad N=(\begin{matrix}n\\ 2\end{matrix}).",
+p-21,3,"[803, 3465, 4234, 3933]",0.9671,OK,\frac{z^{N+\frac{1}{2}}-z^{-(N+\frac{1}{2})}}{z^{\frac{1}{2}}-z^{-\frac{1}{2}}}+n-1=\frac{\sin(N+\frac{1}{2})\theta}{\sin\frac{1}{2}\theta}+n-1,
+p-21,4,"[1371, 4346, 3635, 4822]",0.977,OK,\left|A(e^{i\theta})\right|^{2}=\frac{\sin\frac{n^{2}-n+1}{2}\theta}{\sin\frac{1}{2}\theta}+n-1.,
+p-21,5,"[1663, 5207, 3361, 5683]",,SCORE_ERR,\frac{\sin\frac{n^{2}-n+1}{2}\theta}{\sin\frac{1}{2}\theta}<-(n-1).,HTTP Error 500: Internal Server Error
+p-22,1,"[961, 4371, 4071, 4978]",0.8564,OK,"\begin{array}{c} \frac{1}{1-z}=\frac{z^{b_{1}}}{1-z^{a_{1}}}+\frac{z^{b_{2}}}{1-z^{a_{2}}}+\cdots+\frac{z^{b_{k}}}{1-z^{a_{k}}}, \\ 1<a_{1}<a_{2}<\ldots<a_{k}. \end{array}",
+p-25,1,"[1661, 3045, 3315, 3501]",,SCORE_ERR,\sum_{n=0}^{\infty}p(n)z^{n}=\prod_{k=1}^{\infty}\frac{1}{1-z^{k}},HTTP Error 500: Internal Server Error
+p-26,1,"[1079, 4596, 3926, 5617]",,SCORE_ERR,\begin{array}{l} \log F (z) = \sum_{k = 1}^{\infty} \log \frac{1}{1 - z^{k}} = \sum_{k = 1}^{\infty} \sum_{j = 1}^{\infty} \frac{z^{k j}}{j} \\ = \sum_{j = 1}^{\infty} \frac{1}{j} \sum_{k = 1}^{\infty} z^{j k} = \sum_{j = 1}^{\infty} \frac{1}{j} \frac{z^{j}}{1 - z^{j}}. \\ \end{array},HTTP Error 500: Internal Server Error
+p-26,2,"[793, 6647, 4130, 7666]",0.8186,OK,\begin{array}{l} \log F (e^{- w}) = \sum \frac{1}{k} \left(\frac{1}{k w} - \frac{e^{- k w}}{2}\right) \\ + \sum \frac{1}{k} \left(\frac{1}{e^{k w} - 1} - \frac{1}{k w} + \frac{e^{- k w}}{2}\right) \end{array},
+p-27,1,"[1548, 631, 4214, 1535]",,SCORE_ERR,\begin{array}{l} = \frac{\pi^{2}}{6 w} + \frac{1}{2} \log (1 - e^{- w}) \\ + \sum \frac{1}{k} \left(\frac{1}{e^{k w} - 1} - \frac{1}{k w} + \frac{e^{- k w}}{2}\right). \end{array},HTTP Error 500: Internal Server Error
+p-27,2,"[403, 5625, 4587, 6075]",0.9846,OK,\sum_{k=1}^{\infty}[\phi(kh)-\psi(kh)]h-\int_{0}^{\infty}[\phi(x)-\psi(x)]\ll h[\phi(0)+\psi(0)].,
+p-27,3,"[1248, 6588, 3741, 7030]",,SCORE_ERR,\sum_{k=1}^{\infty} F(kh)h - \int_{0}^{\infty} F(x) \ll h \cdot V(F).,HTTP Error 500: Internal Server Error
+p-28,1,"[982, 1168, 4011, 1606]",0.972,OK,\sum_{k=1}^{\infty} F(khe^{i\theta})h - \int_{0}^{\infty} F(xe^{i\theta})dx \ll h \cdot V_{\theta}(F),
+p-28,2,"[864, 2082, 4139, 2522]",,SCORE_ERR,\sum_{k=1}^{\infty} F(kw)w - \int_{0}^{\infty} F(xe^{i\theta})d(xe^{i\theta}) \ll w \cdot V_{\theta}(F).,HTTP Error 500: Internal Server Error
+p-28,3,"[786, 3604, 4208, 4038]",0.9385,OK,\sum_{k=1}^{\infty} F(kw)w - \int_{0}^{\infty} F(x)dx \ll w \int_{0}^{\infty} |F^{\prime}(xe^{i\theta})|dx.,
+p-28,4,"[976, 4471, 4026, 4884]",,SCORE_ERR,"\int_{0}^{\infty}\left(\frac{1}{e^{x}-1}-\frac{1}{x}+\frac{e^{-x}}{2}\right)\frac{dx}{x}=\log\frac{1}{\sqrt{2\pi}},",HTTP Error 500: Internal Server Error
+p-28,5,"[858, 5327, 4128, 6207]",,SCORE_ERR,\begin{array}{l} F^{\prime}(x e^{i\theta})=\frac{2}{x^{3}e^{3i\theta}}-\frac{e^{-x e^{i\theta}}}{2x^{2}e^{2i\theta}}-\frac{e^{-x e^{i\theta}}}{2x e^{i\theta}} \\ -\frac{1}{x^{2}e^{2i\theta}(e^{x e^{i\theta}}-1)}-\frac{e^{x e^{i\theta}}}{x e^{i\theta}(e^{x e^{i\theta}}-1)^{2}} \end{array},HTTP Error 500: Internal Server Error
+p-28,6,"[590, 6885, 4230, 7347]",0.9687,OK,\sum_{k=1}^{\infty}\frac{1}{k}\left(\frac{1}{e^{kw}-1}-\frac{1}{kw}+\frac{e^{-kw}}{2}\right)-\log\frac{1}{\sqrt{2\pi}}\ll Mw,
+p-29,1,"[1013, 1379, 4036, 2813]",,SCORE_ERR,\begin{array}{l} \prod_{k=1}^{\infty} \frac{1}{1-z^{k}} \\ = \sqrt{\frac{1-z}{2\pi}} \exp \left(\frac{\pi^{2}}{6 \log \frac{1}{z}}\right) [1+O(1-z)] \\ \text{in} \quad \frac{|1-z|}{1-|z|} \leq c. \end{array},HTTP Error 500: Internal Server Error
+p-29,2,"[960, 4220, 4102, 5257]",,SCORE_ERR,\begin{array}{l} \prod_{k=1}^{\infty} \frac{1}{1-z^{k}} \\ = \sqrt{\frac{1-z}{2\pi}} \exp \left(\frac{\pi^{2}}{12} \frac{1+z}{1-z}\right) [1+O(1-z)] \end{array},HTTP Error 500: Internal Server Error
+p-29,3,"[1234, 5360, 2408, 5754]",0.9405,OK,\text{in}\quad \frac{|1-z|}{1-|z|} \le c.,
+p-30,1,"[603, 918, 4378, 1912]",,SCORE_ERR,"\begin{array}{l} \log F(z) - \frac{1}{1 - z} \ll \sum_{j = 2}^{\infty} \frac{1}{j} \frac{|z|^{j}}{1 - |z|^{j}} \ll \frac{1}{1 - |z|} \sum_{j = 2}^{\infty} \frac{1}{j} \frac{1}{j} \\ = \frac{1}{1 - |z|} \left(\frac{\pi^{2}}{6} - 1\right), \\ \end{array}",HTTP Error 500: Internal Server Error
+p-30,2,"[923, 2242, 4081, 2736]",,SCORE_ERR,"F(z)\ll\exp\left(\frac{1}{|1-z|}+\left(\frac{\pi^{2}}{6}-1\right)\frac{1}{1-|z|}\right),",HTTP Error 500: Internal Server Error
+p-30,3,"[1065, 3485, 3945, 3883]",,SCORE_ERR,F(z)\ll\exp\frac{1}{|1-z|}\quad\text{when}\quad\frac{|1-z|}{1-|z|}\geq3.,HTTP Error 500: Internal Server Error
+p-30,4,"[587, 4276, 3834, 4743]",0.9623,OK,"\phi(z)=\sqrt{\frac{1-z}{2\pi}}\exp\left(\frac{\pi^{2}}{12}\frac{1+z}{1-z}\right)=\sum_{n=0}^{\infty}q(n)z^{n},",
+p-30,5,"[587, 4838, 4393, 5307]",0.9461,OK,\phi(z) \ll \sqrt{\frac{2}{2\pi}} \exp \left( \frac{\pi^2}{12} \frac{2}{1-z} \right) \ll \exp \left( \frac{\pi^2}{12} \frac{2}{3(1 - |z|)} \right),
+p-30,6,"[942, 5658, 4057, 6053]",0.9732,OK,\phi(z)\ll\exp\left(\frac{1}{1-|z|}\right)\quad\text{when}\quad\frac{|1-z|}{1-|z|}\geq 3.,
+p-30,7,"[1172, 7106, 3828, 7496]",,SCORE_ERR,p(n)-q(n)=\frac{1}{2\pi i}\int_{C}\frac{F(z)-\phi(z)}{z^{n+1}}dz,HTTP Error 500: Internal Server Error
+p-31,1,"[1738, 933, 3270, 1113]",0.9762,OK,"C \quad \text{is} \quad |z| = r, r < 1.",
+p-31,2,"[1280, 1671, 3714, 2063]",0.9235,OK,"A \quad \text{is the arc} \quad |z| = r, \frac{|1 - z|}{1 - |z|} \leq 3,",
+p-31,3,"[1301, 2379, 3710, 2768]",0.9059,OK,"B \quad \text{is the arc} \quad |z| = r, \frac{|1 - z|}{1 - |z|} \geq 3.",
+p-31,4,"[595, 3133, 4407, 3749]",0.7351,OK,"\begin{array}{l} p(n) - q(n) \\ = \frac{1}{2 \pi i} \int_{A} \frac{F(z) - \phi(z)}{z^{n + 1}} d z + \frac{1}{2 \pi i} \int_{B} \frac{F(z) - \phi(z)}{z^{n + 1}} d z, \end{array}",
+p-31,5,"[633, 4261, 4401, 5173]",,SCORE_ERR,\begin{array}{l}\frac{1}{2\pi i}\int_{A}\frac{F(z)-\phi(z)}{z^{n+1}}dz\\\ll\frac{M^{\prime}}{r^{n+1}}(1-r)^{3/2}\exp\left(\frac{\pi^{2}}{6}\frac{1}{1-r}\right)\times\text{the length of}A.\\\end{array},HTTP Error 500: Internal Server Error
+p-31,6,"[1804, 5734, 3172, 6156]",,SCORE_ERR,4r\arcsin\frac{\sqrt{2}(1-r)}{\sqrt{r}},HTTP Error 500: Internal Server Error
+p-31,7,"[1230, 6484, 3793, 7409]",,SCORE_ERR,"\begin{array}{l} \frac{1}{2 \pi i} \int_{A} \frac{F(z) - \phi(z)}{z^{n + 1}} d z \\ \ll M \frac{(1 - r)^{5 / 2}}{r^{n}} \cdot \exp \left(\frac{\pi^{2}}{6} \frac{1}{1 - r}\right), \\ \end{array}",HTTP Error 500: Internal Server Error
+p-32,1,"[572, 940, 4467, 1787]",0.9146,OK,\begin{array}{l} \frac{1}{2 \pi i} \int_{B} \frac{F (z) - \phi (z)}{z^{n + 1}} d z \ll \frac{1}{2 \pi r^{n + 1}} \cdot 2 \exp \left(\frac{1}{1 - r}\right) \cdot 2 \pi r \\ = \frac{2}{r^{n}} \exp \left(\frac{1}{1 - r}\right). \\ \end{array},
+p-32,2,"[776, 2423, 3967, 2891]",0.9801,OK,p(n)-q(n)\ll M\frac{(1-r)^{5/2}}{r^{n}}\exp\left(\frac{\pi^{2}}{6}\frac{1}{1-r}\right).,
+p-32,3,"[1347, 4413, 3643, 4807]",0.9594,OK,p(n)=q(n)+O\left(n^{-5/4}e^{\pi\sqrt{n/6}}\right).,
+p-32,4,"[1895, 6468, 3128, 6869]",0.9882,OK,\int_{-\infty}^{\infty}e^{-t^{2}}dt=\sqrt{\pi},
+p-32,5,"[1702, 7280, 3300, 7696]",,SCORE_ERR,"\int_{-\infty}^{\infty}e^{-(at-b)^{2}}dt=\frac{\sqrt{\pi}}{a},",HTTP Error 500: Internal Server Error
+p-33,1,"[1523, 874, 3488, 1288]",,SCORE_ERR,\int_{-\infty}^{\infty}e^{-a^{2}t^{2}}e^{+2abt}dt=\frac{\sqrt{\pi}}{a}e^{b^{2}}.,HTTP Error 500: Internal Server Error
+p-33,2,"[801, 1873, 4201, 2333]",,SCORE_ERR,"\int_{-\infty}^{\infty} e^{zt^{2}} e^{+\pi \sqrt{\frac{2}{3}} t - t^{2}} dt = \frac{\sqrt{\pi}}{\sqrt{1 - z}} \exp \left( \frac{\pi^{2}}{6} \frac{1}{1 - z} \right),",HTTP Error 500: Internal Server Error
+p-33,3,"[1061, 2694, 3936, 3126]",0.9786,OK,\phi(z)=\frac{e^{-\pi^{2}/12}}{\pi\sqrt{2}}(1-z)\int_{-\infty}^{\infty}e^{zt^{2}}e^{\pi\sqrt{\frac{2}{3}}t-t^{2}}dt.,
+p-33,4,"[614, 3449, 4114, 3935]",0.9501,OK,q(n)=\frac{e^{-\pi^{2}/12}}{\pi\sqrt{2}}\int_{-\infty}^{\infty}[\frac{t^{2n}}{n!}-\frac{t^{2n-2}}{(n-1)!}]e^{\pi\sqrt{2/3}t-t^{2}}dt,
+p-33,5,"[1212, 4683, 3765, 5121]",,SCORE_ERR,"q(n)=C_{n}\int_{-\infty}^{\infty}K_{n}(s)2se^{-2\left(s-\frac{\pi}{2\sqrt{6}}\right)^{2}}ds,",HTTP Error 500: Internal Server Error
+p-33,6,"[962, 5426, 4053, 6497]",,SCORE_ERR,"\begin{array}{l} C_{n} = \frac{e^{\pi \sqrt{2 n / 3}}}{\pi \sqrt{2} n} \frac{n^{n + \frac{1}{2}}}{e^{n} n!}, \\ K_{n}(s) = \frac{1 + \frac{s}{2 \sqrt{n}}}{\left(1 + \frac{s}{\sqrt{n}}\right)^{2}} \left[ \left(1 + \frac{s}{\sqrt{n}}\right) e^{\frac{-s}{\sqrt{n}} + \frac{s^{2}}{2 n}} \right]^{2 n}. \end{array}",HTTP Error 500: Internal Server Error
+p-33,7,"[835, 7066, 4159, 7507]",0.9821,OK,"\int_{-\infty}^{\infty} 2s e^{-2\left(s - \frac{\pi}{2\sqrt{6}}\right)^2} ds = \int_{-\infty}^{\infty} \left(u + \frac{\pi}{2\sqrt{3}}\right) e^{-u^2} du,",
+p-34,1,"[1596, 1437, 3395, 1886]",,SCORE_ERR,q(n)\sim\frac{e^{\pi\sqrt{2n/3}}}{4\sqrt{3}n}\frac{\sqrt{2\pi n}n^{n}}{e^{n}n!}.,HTTP Error 500: Internal Server Error
+p-34,2,"[1897, 2577, 3087, 3041]",,SCORE_ERR,"q(n)\sim\frac{e^{\pi\sqrt{2n/3}}}{4\sqrt{3}n},",HTTP Error 500: Internal Server Error
+p-34,3,"[1907, 3536, 3094, 4001]",0.9005,OK,p(n)\sim\frac{e^{\pi\sqrt{2n/3}}}{4\sqrt{3}n}.,
+p-34,4,"[1813, 5220, 3210, 5633]",,SCORE_ERR,\left(1+\frac{s}{\sqrt{n}}\right)e^{\frac{-s}{\sqrt{n}}}\leq1,HTTP Error 500: Internal Server Error
+p-34,5,"[1786, 6159, 3203, 6572]",,SCORE_ERR,\left| 1 + \frac{s}{\sqrt{n}} \right| e^{\frac{-s}{\sqrt{n}}} \leq e^{\frac{s^{2}}{2 n}},HTTP Error 500: Internal Server Error
+p-34,6,"[1645, 7276, 3366, 7484]",,SCORE_ERR,"K_{n}(s)\leq e^{s^{2}}\quad\text{for}\quad s\geq 0,",HTTP Error 500: Internal Server Error
+p-35,1,"[973, 914, 4043, 1907]",,SCORE_ERR,\begin{array}{l} |K_{n}(s)| \leq (1-s)e^{s^{2}-\frac{2s}{\sqrt{n}}} \left(\left|1+\frac{s}{\sqrt{n}}\right| e^{\frac{-s}{\sqrt{n}}}\right)^{2n-2} \\ \leq (1-s)e^{s^{2}-\frac{2s}{\sqrt{n}}} e^{\frac{n-1}{n} s^{2}} \\ = (1-s)e^{2s^{2}+1-(1+s/\sqrt{n})^{2}} \end{array},HTTP Error 500: Internal Server Error
+p-35,2,"[1264, 2252, 3743, 2459]",0.9659,OK,|K_{n}(s)| \le (1-s)e^{2s^{2}+1} \quad \text{for} \quad s < 0.,
+p-35,3,"[1527, 2832, 3468, 3165]",0.9572,OK,"2se^{s^{2}-2\left(s-\frac{\pi}{2\sqrt{6}}\right)^{2}}\quad\text{for}\quad s\geq 0,",
+p-35,4,"[1399, 3546, 3601, 3757]",0.9679,OK,2s(s-1)e^{1+\pi\sqrt{2/3s}}\quad\text{for}\quad s<0.,
+p-35,5,"[1065, 5297, 3916, 5703]",0.9813,OK,\int_{0}^{\infty} (1 - e^{- N x}) \left( \frac{1}{e^{x} - 1} - \frac{1}{x} + \frac{e^{- x}}{2} \right) \frac{d x}{x},
+p-35,6,"[511, 6036, 4522, 6952]",0.9709,OK,\begin{array}{l} \int_{0}^{\infty} (1 - e^{- N x}) \left(\frac{1}{e^{x} - 1} - \frac{1}{x}\right) \frac{d x}{x} + \int_{0}^{\infty} (1 - e^{- N x}) \frac{e^{- x}}{2 x} d x \\ = \sum_{k = 1}^{N} \int_{0}^{\infty} e^{- k x} \frac{1 + x - e^{x}}{x^{2}} d x + \frac{1}{2} \int_{0}^{\infty} \frac{e^{- x} - e^{- (N + 1) x}}{x} d x. \\ \end{array},
+p-35,7,"[1504, 7290, 3533, 7694]",0.9775,OK,\frac{1+x-e^{x}}{x^{2}}=-\int_{0}^{1}te^{(1-t)x}dt,
+p-36,1,"[1446, 874, 3584, 1286]",0.9691,OK,\frac{e^{-x}-e^{-(N+1)x}}{x}=\int_{1}^{N+1}e^{-sx}ds.,
+p-36,2,"[683, 1807, 4357, 4865]",,SCORE_ERR,\begin{array}{l} - \sum_{k=1}^{N} \int_{0}^{1} \frac{t}{k + t - 1} d t + \frac{1}{2} \int_{1}^{N+1} \frac{d s}{s} \\ = \sum_{k=1}^{N} \left((k - 1) \log \left(\frac{k}{k - 1}\right) - 1\right) + \frac{1}{2} \log (N + 1) \\ = \sum_{k=1}^{N} (k - 1) \log k - (k - 1) \log (k - 1) - N \\ + \frac{1}{2} \log (N + 1) \\ = N \log N - \log N - \log (N - 1) - \cdots - \log 1 - N \\ + \frac{1}{2} \log (N + 1) \\ = N \log N - \log N! - N + \frac{1}{2} \log (N + 1). \\ \end{array},HTTP Error 500: Internal Server Error
+p-37,1,"[1462, 2745, 3577, 3177]",,SCORE_ERR,\frac{1}{\log\frac{1}{z}}=\frac{1}{2}\frac{1+z}{1-z}+O(1-z)?,HTTP Error 500: Internal Server Error
+p-38,1,"[755, 6224, 4275, 6619]",,SCORE_ERR,"\frac{r(0)+r(1)+r(2)+\cdots+r(n)}{n+1}=\frac{\pi}{4}+O\left(\frac{1}{\sqrt{n}}\right),",HTTP Error 500: Internal Server Error
+p-38,2,"[739, 7041, 4286, 7431]",0.9781,OK,\frac{r(0)+r(1)+r(2)+\cdots+r(n)}{n+1}=\frac{\pi}{4}+O\left(\frac{1}{n^{2/3}}\right).,
+p-39,1,"[1409, 4224, 3600, 4598]",0.9806,OK,"A^{2}(z)-A(z^{2})=P(z)+\frac{C}{1-z},",
+p-39,2,"[1138, 6265, 3900, 7714]",,SCORE_ERR,\begin{array}{l} \int_{-\pi}^{\pi} |A^{2}(re^{i\theta})| d\theta \\ \leq \int_{-\pi}^{\pi} |A(r^{2}e^{2i\theta})| d\theta + \int_{-\pi}^{\pi} |P(re^{i\theta})| d\theta \\ + C \int_{-\pi}^{\pi} \frac{d\theta}{|1-re^{i\theta}|}. \end{array},HTTP Error 500: Internal Server Error
+p-40,1,"[1760, 895, 3241, 1289]",,SCORE_ERR,"\int_{-\pi}^{\pi}|P(re^{i\theta})|d\theta\leq M,",HTTP Error 500: Internal Server Error
+p-40,2,"[1051, 2719, 3940, 4382]",,SCORE_ERR,\begin{array}{l} \int_{0}^{\pi} \frac{d\theta}{|1 - re^{i\theta}|} \leq (\Re + \Im) \int_{0}^{\pi} \frac{ie^{i\theta}}{e^{i\theta} - r} d\theta \\ = (\Re + \Im) \left(\log(e^{i\theta} - r)\right) \big|_{0}^{\pi} \\ = (\Re + \Im) \log\left(-\frac{1 + r}{1 - r}\right) \\ = \pi + \log\left(\frac{1 + r}{1 - r}\right). \end{array},HTTP Error 500: Internal Server Error
+p-40,3,"[1166, 4715, 3838, 5121]",0.9782,OK,\int_{-\pi}^{\pi}\frac{d\theta}{|1-re^{i\theta}|}\leq 2\pi+2\log\left(\frac{1+r}{1-r}\right).,
+p-40,4,"[806, 5653, 4191, 6996]",,SCORE_ERR,"\begin{array}{l} \int_{-\pi}^{\pi} |\sum a_{n} e^{in\theta}|^{2} d\theta = \int_{-\pi}^{\pi} \sum a_{n} e^{in\theta} \sum \bar{a}_{m} e^{-im\theta} d\theta \\ = \int_{-\pi}^{\pi} \sum_{m,n} a_{n} \bar{a}_{m} e^{i(n-m)\theta} d\theta \\ = \sum_{n,m} a_{n} \bar{a}_{m} \int_{-\pi}^{\pi} e^{i(n-m)\theta} d\theta \end{array}",HTTP Error 500: Internal Server Error
+p-41,1,"[1088, 1312, 3914, 1723]",0.9835,OK,\int_{-\pi}^{\pi}|A(re^{i\theta})|^{2}d\theta=2\pi\sum_{a\in A}r^{2a}=2\pi A(r^{2}).,
+p-41,2,"[1446, 2872, 3553, 3262]",0.985,OK,\int_{-\pi}^{\pi}|A(r^{2}e^{2i\theta})|d\theta\leq2\pi\sqrt{A(r^{4})}.,
+p-41,3,"[865, 3802, 4137, 4209]",,SCORE_ERR,A(r^{2}) \leq \sqrt{A(r^{4})} + \frac{M}{2\pi} + C + \frac{C}{\pi} \log \left( \frac{1+r}{1-r} \right).,HTTP Error 500: Internal Server Error
+p-41,4,"[1063, 4956, 3942, 5355]",,SCORE_ERR,A(r^{2}) \leq \sqrt{A(r^{2})} + M^{\prime} + \frac{C}{\pi} \log \left( \frac{1+r}{1-r} \right).,HTTP Error 500: Internal Server Error
+p-41,5,"[461, 6351, 4346, 6778]",0.9331,OK,A(r^{2}) \leq M^{\prime\prime} + \frac{C}{\pi} \log \left( \frac{1 + r}{1 - r} \right) + \sqrt{M^{\prime\prime\prime}} + \frac{C}{\pi} \log \left( \frac{1 + r}{1 - r} \right).,
+p-42,1,"[411, 624, 4556, 858]",0.9857,OK,"\frac{C}{1-r^{2}}, A^{2}(r^{2}) \geq P(r^{2}) + \frac{C}{1-r^{2}}, A^{2}(r^{2}) \geq -M + \frac{C}{1-r^{2}}, \text{and finally}",
+p-42,2,"[1617, 970, 3389, 1352]",0.9826,OK,"A(r^{2}) \geq \sqrt{-M + \frac{C}{1 - r^{2}}},",
+p-42,3,"[438, 6053, 4267, 6230]",0.9691,OK,"r(0)+r(1)+\cdots+r(n)=C(n+1)+O(n^{\alpha}),\quad C>0,",
+p-42,4,"[803, 7247, 4219, 7667]",0.9864,OK,"\frac{1}{1-z}A^{2}(z)=\frac{C}{(1-z)^{2}}+\sum_{n=0}^{\infty}a_{n}z^{n},\quad a_{n}=O(n^{\alpha}),",
+p-43,1,"[691, 903, 4047, 1330]",0.9719,OK,"A^{2}(z)=\frac{C}{1-z}+(1-z)\sum_{n=0}^{\infty}a_{n}z^{n},\quad a_{n}=O(n^{\alpha}).",
+p-43,2,"[1499, 2107, 3502, 2503]",0.9816,OK,"A(r^{2})>\frac{C^{\prime}}{\sqrt{1-r^{2}}},\quad C^{\prime}>0.",
+p-43,3,"[1047, 4256, 3958, 4463]",0.9808,OK,"S(z)=1+z+z^{2}+\cdots+z^{N-1},\quad N\text{ large}.",
+p-43,4,"[761, 4875, 3965, 5236]",,SCORE_ERR,"[S(z)A(z)]^{2}=\frac{CS^{2}(z)}{1-z}+(1-z^{N})S(z)\sum a_{n}z^{n},",HTTP Error 500: Internal Server Error
+p-43,5,"[1111, 5623, 3886, 6006]",,SCORE_ERR,"|S(z)A(z)|^{2}\leq\frac{CN^{2}}{|1-z|}+2|S(z)\sum a_{n}z^{n}|,",HTTP Error 500: Internal Server Error
+p-43,6,"[1270, 6386, 3757, 7699]",,SCORE_ERR,\begin{array}{l} \int_{-\pi}^{\pi} |S(re^{i\theta})A(re^{i\theta})|^{2} d\theta \\ \leq C N^{2} \int_{-\pi}^{\pi} \frac{d\theta}{|1-re^{i\theta}|} \\ + 2 \int_{-\pi}^{\pi} |S(re^{i\theta}) \sum a_{n}(re^{i\theta})^{n}| d\theta. \end{array},HTTP Error 500: Internal Server Error
+p-44,1,"[2059, 2695, 2966, 3068]",0.9688,OK,\frac{1}{1-r^{2}}\geq N.,
+p-44,2,"[767, 3793, 3964, 4212]",0.9742,OK,"\int_{-\pi}^{\pi}|S(re^{i\theta})A(re^{i\theta})|^{2}d\theta>\frac{C^{\prime\prime}N}{\sqrt{1-r^{2}}},\quad C^{\prime\prime}>0.",
+p-44,3,"[1164, 4618, 3819, 5008]",0.9763,OK,CN^{2}\int_{-\pi}^{\pi}\frac{d\theta}{|1-re^{i\theta}|}\leq MN^{2}\log\frac{e}{1-r^{2}},
+p-44,4,"[732, 5420, 4291, 6820]",,SCORE_ERR,\begin{array}{l} \int_{-\pi}^{\pi} \left| S(re^{i\theta}) \sum a_{n}(re^{i\theta})^{n} \right| d\theta \\ \leq \sqrt{\int_{-\pi}^{\pi} \left| S(re^{i\theta}) \right|^{2} d\theta \int_{-\pi}^{\pi} \left| \sum a_{n}(re^{i\theta})^{n} \right|^{2} d\theta} \\ = 2\pi \sqrt{\sum_{k < N} r^{2k} \sum |a_{n}|^{2} r^{2n}} \leq 2\pi \sqrt{N} M \sqrt{\sum n^{2\alpha} r^{2n}}. \end{array},HTTP Error 500: Internal Server Error
+p-44,5,"[943, 7282, 4063, 7690]",,SCORE_ERR,\int_{-\pi}^{\pi}\left|S(re^{i\theta})\sum a_{n}(re^{i\theta})^{n}\right|d\theta\leq\frac{M\sqrt{N}}{(1-r^{2})^{\alpha+1/2}}.,HTTP Error 500: Internal Server Error
+p-45,1,"[963, 901, 4067, 1310]",0.9774,OK,\frac{C^{\prime\prime}}{M}\leq N\sqrt{1-r^{2}}\log\frac{e}{1-r^{2}}+\frac{1}{\sqrt{N}(1-r^{2})^{\alpha}}.,
+p-45,2,"[1610, 2290, 3412, 2658]",,SCORE_ERR,\frac{C^{\prime\prime}}{M}\leq N^{\frac{4\alpha-1}{4\alpha+2}}(2+3\log N).,HTTP Error 500: Internal Server Error
+p-49,1,"[998, 5296, 4031, 5742]",0.9392,OK,"\frac{p(z)}{1-\frac{z}{\zeta}}=\sum_{m<n}p_{m}(\zeta)\left(\frac{z}{\zeta}\right)^{m}+\frac{p(\xi)}{1-\frac{z}{\xi}}\left(\frac{z}{\xi}\right)^{n},",
+p-50,1,"[1389, 1128, 3595, 1885]",,SCORE_ERR,"\sum_{\beta=1}^{\alpha}\omega^{\beta}\left(\sum_{\substack{a\in S\\ a<m\\ a\equiv\beta(\alpha)}}1-C_{P}\sum_{\substack{k<m\\ k\equiv\beta(\alpha)}}1\right),",HTTP Error 500: Internal Server Error
+p-50,2,"[2032, 2269, 2964, 2750]",0.9811,OK,\sigma_{\beta} = \sum_{\substack{a \in S \\ a < m \\ a \equiv \beta(\alpha)}} 1,
+p-50,3,"[580, 3710, 4545, 6411]",,RENDER_FAIL,\begin{array}{l} q_{m}(\omega) = - \sum_{\beta = 1}^{\alpha} \omega^{\beta} \left(f \left(\frac{m}{\alpha}\right) - \sigma_{\beta}\right) \\ \quad + \sum_{\beta = 1}^{\alpha} \omega^{\beta} \left[ f \left(\frac{m}{\alpha}\right) - C_{P} \sum_{\substack{k < m \\ k \equiv \beta (\alpha)}} 1 \right] \\ \leq \sum_{\beta = 1}^{\alpha} \left| f \left(\frac{m}{\alpha}\right) - \sigma_{\beta} \right| + \sum_{\beta = 1}^{\alpha} \left| f \left(\frac{m}{\alpha}\right) - C_{P} \left\lfloor \frac{m}{\alpha} \right\rfloor \right| \\ = \sum_{\beta = 1}^{\alpha} \left(f \left(\frac{m}{\alpha}\right) - \sigma_{\beta}\right) + \sum_{\beta = 1}^{\alpha} \left(f \left(\frac{m}{\alpha}\right) - C_{P} \frac{m}{\alpha}\right) \\ = 2 \alpha f \left(\frac{m}{\alpha}\right) - \sum_{\beta = 1}^{\alpha} \sigma_{\beta} - C_{P} m. \end{array} \tag{3},"ype  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.4 ... \sigma_{\beta} - C_{P} m. \end{array} \tag
+                                                  {3}$
+No pages of output.
+Transcript written on p-50_b3.log.
+"
+p-50,4,"[877, 7219, 4119, 7668]",0.9804,OK,\sum_{\beta = 1}^{\alpha} \sigma_{\beta} \geq f (n) - f (n - m) \geq C_{P} n - f (n - m).,
+p-51,1,"[446, 898, 4332, 1294]",0.961,OK,q_{m}(\omega) \ll 2\alpha \left[ f \left( \frac{m}{\alpha} \right) - C_{P} \frac{m}{\alpha} \right] + (f(n-m) - C_{P}(n-m)).,
+p-51,2,"[538, 2194, 4269, 2584]",0.9597,OK,q_{m}(\omega) \ll 2\alpha F \left(\frac{m}{\alpha}\right) + F(n - m) \leq 2\alpha F \left(\frac{n}{\alpha}\right) + F(n),
+p-51,3,"[1035, 4311, 3956, 4705]",0.9765,OK,q(z)\ll[2\alpha F\left(\frac{n}{\alpha}\right)+F(n)]\left(1+2\pi\frac{n_{0}}{\alpha}\right).,
+p-52,1,"[1607, 941, 3385, 1321]",,SCORE_ERR,\mathcal{A}(n;P)=\frac{C_{P}^{3}}{2}n^{2}+o(n^{2}).,HTTP Error 500: Internal Server Error
+p-52,2,"[1434, 2064, 3562, 2468]",,SCORE_ERR,\mathcal{A}=\frac{1}{2\pi i}\int_{|z|=1}g^{2}(z)g(z^{-2})\frac{dz}{z}.,HTTP Error 500: Internal Server Error
+p-52,3,"[1505, 3057, 3483, 3458]",0.9734,OK,C_{P}^{3}\frac{1}{2\pi i}\int_{|z|=1}G^{2}(z)G(z^{-2})\frac{dz}{z},
+p-52,4,"[1030, 5196, 3967, 5598]",0.9429,OK,\mathcal{A}=C_{P}^{3}\frac{1}{2\pi i}\int_{|z|=1}G^{2}(z)G(z^{-2})\frac{dz}{z}+o(n^{2}).,
+p-57,1,"[1445, 3145, 3552, 3578]",,SCORE_ERR,\sum_{n\in I}e\left(\frac{P(n)}{b}\right)\ll N^{1+o(1)}b^{-2^{1-k}},HTTP Error 500: Internal Server Error
+p-57,2,"[1839, 4958, 3158, 5397]",,SCORE_ERR,S=\sum_{n\in I}e\left(\frac{P(n)}{b}\right),HTTP Error 500: Internal Server Error
+p-57,3,"[788, 5857, 4212, 6377]",0.9796,OK,"|S|^{2}=\sum_{j=-N+1}^{N-1}\sum_{\substack{n\in\{1,2,\ldots,N\} \\ n\in\{j+1,j+2,\ldots,j+N\}}} e\left(\frac{P(n)-P(n-j)}{b}\right).",
+p-58,1,"[739, 968, 4267, 1697]",,SCORE_ERR,\begin{array}{l} |S|^{2} \ll \sum_{d|b} \frac{N}{b} d N^{1+o(1)} d^{-\frac{1}{2k-2}} \leq \frac{N^{2+o(1)}}{b} b^{1-\frac{1}{2k-2}} \sum_{d|b} 1 \\ \ll N^{2+o(1)} b^{-\frac{1}{2k-2}} b^{o(1)}. \end{array},HTTP Error 500: Internal Server Error
+p-58,2,"[1839, 2121, 3163, 2345]",0.8967,OK,"S\ll N^{1+o(1)}b^{-\frac{1}{2^{k-1}}},",
+p-58,3,"[1380, 3649, 3631, 4102]",0.9698,OK,\left|\sum_{n=1}^{N}e\left(\frac{a}{b}n^{k}\right)\right|\leq C_{1}N^{1+o(1)}b^{-2^{1-k}}.,
+p-58,4,"[1851, 5074, 3141, 5583]",,SCORE_ERR,"r_{s}(n) = \sum_{\substack{n_{1}^{k} + \cdots + n_{s}^{k} = n \\ n_{i} \geq 0}} 1,",HTTP Error 500: Internal Server Error
+p-58,5,"[1204, 7214, 3784, 7662]",0.9768,OK,"r_{s}(n)=\int_{0}^{1}\left[\sum_{m\le n^{1/k}}e(xm^{k})\right]^{s}e(-nx)dx,",
+p-59,1,"[973, 991, 4038, 1451]",0.9555,OK,\int_{0}^{1}\left|\sum_{n=1}^{N}e(xn^{k})\right|^{g}dx\leq CN^{g-k}\quad\text{for all}\quad n>0.,
+p-59,2,"[991, 2907, 4018, 3374]",0.963,OK,\int_{0}^{1}\left|\sum_{n=1}^{N}e(xn^{k})\right|^{g}dx>cN^{g-k}\quad\text{for all}\quad n>0.,
+p-59,3,"[1098, 4153, 3907, 4601]",,SCORE_ERR,"\left|\sum_{n=1}^{N}e(xn^{k})\right|\geq N-2\pi N^{k+1}\frac{1}{4\pi N^{k}}=\frac{N}{2},",HTTP Error 500: Internal Server Error
+p-59,4,"[1659, 7196, 3350, 7687]",,SCORE_ERR,\left|\sum_{n=1}^{N}e(xn^{k})\right|\leq\frac{C_{2}N}{(b+j)^{\epsilon}}.,HTTP Error 500: Internal Server Error
+p-60,1,"[673, 1112, 4354, 2072]",0.7978,OK,"\begin{array}{l} \left|\sum_{n=1}^{N} e(xn^{k})\right| \leq \left|\sum_{n=1}^{N} e(\frac{a}{b} n^{k})\right| + \left|x - \frac{a}{b}\right| 2\pi N^{k+1} \\ \leq \frac{N^{1+o(1)}}{b^{\frac{1}{2^{k-1}}}} + \frac{2\pi N^{3/2}}{b} \leq \frac{N^{1+o(1)}}{b^{\frac{1}{2^{k-1}}}} + \frac{2\pi N}{b^{1/4}}, \end{array}",
+p-60,2,"[1555, 4172, 3459, 4657]",,SCORE_ERR,\left|\sum_{n=1}^{N}a_{n}f(n)\right|\leq M(V+M^{\prime}).,HTTP Error 500: Internal Server Error
+p-60,3,"[1505, 5000, 3510, 5482]",,SCORE_ERR,\left|\sum_{n=1}^{N}f(n)-\int_{0}^{N}f(t)dt\right|\leq V.,HTTP Error 500: Internal Server Error
+p-60,4,"[1704, 5894, 3292, 6362]",,SCORE_ERR,"\sum_{n=1}^{N}e(xn^{k})=S_{1}+\alpha S_{2},",HTTP Error 500: Internal Server Error
+p-60,5,"[1021, 6699, 3982, 7148]",,SCORE_ERR,"S_{1}=\sum_{n=1}^{N}[e(\frac{a}{b}n^{k})-\alpha]e[(x-\frac{a}{b})n^{k}],",HTTP Error 500: Internal Server Error
+p-60,6,"[1020, 7232, 2863, 7684]",,SCORE_ERR,S_{2}=\sum_{n=1}^{N}e\left[\left(x-\frac{a}{b}\right)n^{k}\right].,HTTP Error 500: Internal Server Error
+p-61,1,"[611, 981, 4397, 1820]",,SCORE_ERR,\begin{array}{l} \left| \sum_{n = 1}^{m} \left[ e \left(\frac{a}{b} n^{k}\right) - \alpha \right] \right| = \left| 0 + \sum_{b [ m / b ] < n \leq m} \left[ e \left(\frac{a}{b} n^{k}\right) - \alpha \right] \right| \\ \leq (1 + |\alpha|) b \leq 2 b. \end{array},HTTP Error 500: Internal Server Error
+p-61,2,"[1467, 2543, 3534, 2748]",0.9786,OK,|S_{1}|\leq 4\pi\sqrt{N}+2b\leq 5\pi N^{2/3}.,
+p-61,3,"[1051, 3235, 3957, 3708]",0.9335,OK,|S_{2}| \leq \left| \int_{0}^{N} e \left[ \left( x - \frac{a}{b} \right) t^{k} \right] dt \right| + \frac{2 \pi \sqrt{N}}{b}.,
+p-61,4,"[559, 4216, 4460, 4693]",0.9398,OK,\left| \int_{0}^{N} e \left[ \left( x - \frac{a}{b} \right) t^{k} \right] dt \right| = \frac{N}{J^{1/k}} \left| \int_{0}^{J^{1/k}} e (u^{k}) du \right| \leq \frac{NC_{3}}{J^{1/k}}.,
+p-61,5,"[1490, 5146, 3509, 5539]",0.939,OK,|\alpha S_{2}|\leq\frac{C_{4}N|\alpha|}{(1+j)^{1/k}}+2\pi\sqrt{N}.,
+p-61,6,"[1085, 6210, 3932, 7142]",0.8374,OK,\begin{array}{l} \left|\sum_{n=1}^{N}e(xn^{k})\right| \leq \frac{C_{5}N}{b^{\delta}(1+j)^{1/k}}+7\pi N^{2/3} \\ \leq \frac{C_{5}N}{b^{\delta}(1+j)^{1/k}}+\frac{C_{6}N}{(b+j)^{1/2}}. \end{array},
+p-62,1,"[1207, 1114, 3801, 1597]",0.9778,OK,"\int_{I_{a,b,N}} \left| \sum_{n=1}^{N} e(xn^{k}) \right|^{g} dx \leq \frac{C_{7} N^{g}}{(b+j)^{4}} \frac{1}{N^{k}}.",
+p-62,2,"[1447, 1951, 3556, 2366]",,SCORE_ERR,"C_{7} N^{g-k} \sum_{b,j} \frac{b}{(b + j)^{4}} \leq C N^{g-k}",HTTP Error 500: Internal Server Error
+p-66,1,"[799, 5160, 4204, 5369]",0.9785,OK,"\chi_{1}:\chi_{1}(1)=1, \chi_{1}(3)=1, \chi_{1}(7)=1, \chi_{1}(9)=1,",
+p-66,2,"[802, 5419, 4212, 5628]",0.9784,OK,"\chi_{3}:\chi_{3}(1)=1, \chi_{3}(3)=1, \chi_{3}(7)=1, \chi_{3}(9)=1,",
+p-66,3,"[802, 5679, 4211, 5888]",0.9666,OK,"\chi_{7}:\chi_{7}(1)=1, \chi_{7}(3)=1, \chi_{7}(7)=1, \chi_{7}(9)=1,",
+p-66,4,"[804, 5936, 4209, 6145]",,SCORE_ERR,"\chi_{9}:\chi_{9}(1)=1,\;\chi_{9}(3)=1,\;\chi_{9}(7)=1,\;\chi_{9}(9)=1,",HTTP Error 500: Internal Server Error
+p-66,5,"[432, 6727, 4496, 7193]",,SCORE_ERR,"L_{1}(z)=\prod_{p\equiv 1}\frac{1}{1-p^{-z}}\prod_{p\equiv 3}\frac{1}{1-p^{-z}}\prod_{p\equiv 7}\frac{1}{1-p^{-z}}\prod_{p\equiv 9}\frac{1}{1-p^{-z}},",HTTP Error 500: Internal Server Error
+p-66,6,"[433, 7230, 4565, 7690]",0.9241,OK,"L_{3}(z)=\prod_{p\equiv 1}\frac{1}{1-p^{-z}}\prod_{p\equiv 3}\frac{1}{1-ip^{-z}}\prod_{p\equiv 7}\frac{1}{1+ip^{-z}}\prod_{p\equiv 9}\frac{1}{1+p^{-z}},",
+p-67,1,"[431, 626, 4561, 1070]",0.9777,OK,"L_{7}(z)=\prod_{p\equiv1}\frac{1}{1-p^{-z}}\prod_{p\equiv3}\frac{1}{1+ip^{-z}}\prod_{p\equiv7}\frac{1}{1-ip^{-z}}\prod_{p\equiv9}\frac{1}{1+p^{-z}},",
+p-67,2,"[481, 1399, 4519, 1851]",,SCORE_ERR,L_{9}(z)=\prod_{p\equiv 1}\frac{1}{1-p^{-z}}\prod_{p\equiv 3}\frac{1}{1+p^{-z}}\prod_{p\equiv 7}\frac{1}{1+p^{-z}}\prod_{p\equiv 9}\frac{1}{1-p^{-z}}.,HTTP Error 500: Internal Server Error
+p-67,3,"[1088, 4320, 3910, 5245]",0.9139,OK,"\begin{array}{l} Z(z) = \prod_{p \equiv 1} \frac{1}{(1 - p^{-z})^{4}} \prod_{p \equiv 3} \frac{1}{(1 - p^{-4z})} \\ \times \prod_{p \equiv 7} \frac{1}{(1 - p^{-4z})} \prod_{p \equiv 9} \frac{1}{(1 - p^{-2z})^{2}}, \end{array}",
+p-68,1,"[1052, 6368, 3953, 6766]",,SCORE_ERR,\sum \frac{1}{(n - \theta)^z} = \frac{1}{\Gamma(z)} \int_{0}^{\infty} \frac{e^{\theta t}}{e^t - 1} \times t^{z - 1} dt,HTTP Error 500: Internal Server Error
+p-68,2,"[477, 7213, 4532, 7661]",0.9615,OK,\sum \frac{1}{(n - \theta)^z} - \frac{1}{z - 1} = \frac{1}{\Gamma(z)} \int_{0}^{\infty} \left( \frac{e^{\theta t}}{e^t - 1} - \frac{e^{-t}}{t} \right) t^{z - 1} dt.,
+p-69,1,"[563, 1126, 4480, 2018]",0.9722,OK,\begin{array}{l} \sum \frac{1}{(n - \theta)^{z}} - \frac{1}{z - 1} \\ = \frac{1}{\Gamma(z + k)} \int_{0}^{\infty} \left(- \frac{d}{d t}\right)^{k} \left(\frac{e^{\theta t}}{e^{t} - 1} - \frac{e^{- t}}{t}\right) t^{z + k - 1} d t. \\ \end{array},
+p-72,1,"[1607, 2090, 3393, 2489]",,SCORE_ERR,"\int_{\Gamma} f(z) N^{z} \left( \frac{1}{z} + \frac{z}{R^{2}} \right) dz,",HTTP Error 500: Internal Server Error
+p-72,2,"[1019, 6813, 3981, 7218]",,SCORE_ERR,2\pi i F(w)=\int_{\Gamma}F(z+w)N^{z}\left(\frac{1}{z}+\frac{z}{R^{2}}\right)dz.,HTTP Error 500: Internal Server Error
+p-73,1,"[771, 896, 4259, 1749]",,SCORE_ERR,"\begin{array}{l} \int_{A} S_{N}(z + w) N^{z} \left(\frac{1}{z} + \frac{z}{R^{2}}\right) d z \\ = 2 \pi i S_{N}(w) - \int_{- A} S_{N}(z + w) N^{z} \left(\frac{1}{z} + \frac{z}{R^{2}}\right) d z, \end{array}",HTTP Error 500: Internal Server Error
+p-73,2,"[780, 2275, 4259, 3122]",0.9782,OK,\begin{array}{l} \int_{A} S_{N}(z + w) N^{z} \left(\frac{1}{z} + \frac{z}{R^{2}}\right) d z \\ = 2 \pi i S_{N}(w) - \int_{A} S_{N}(w - z) N^{- z} \left(\frac{1}{z} + \frac{z}{R^{2}}\right) d z. \end{array},
+p-73,3,"[684, 3473, 4320, 4545]",0.9659,OK,"\begin{array}{l} 2 \pi i [ F (w) - S_{N} (w) ] \\ = \int_{A} \left[ r_{N} (z + w) N^{z} - \frac{S_{N} (w - z)}{N^{z}} \right] \left(\frac{1}{z} + \frac{z}{R^{2}}\right) d z \\ + \int_{B} F (z + w) N^{z} \left(\frac{1}{z} + \frac{z}{R^{2}}\right) d z, \\ \end{array}",
+p-73,4,"[789, 5272, 4031, 5648]",,SCORE_ERR,"\frac{1}{z}+\frac{z}{R^{2}}=\frac{2x}{R^{2}}\text{along}|z|=R\text{(in particular on } A),",HTTP Error 500: Internal Server Error
+p-73,5,"[788, 5719, 4314, 6144]",,SCORE_ERR,"\frac{1}{z}+\frac{z}{R^{2}}\ll\frac{1}{\delta}\left(1+\frac{|z|^{2}}{R^{2}}\right)=\frac{2}{\delta}\text{ on the line }\Re z=-\delta,",HTTP Error 500: Internal Server Error
+p-73,6,"[1192, 6225, 1776, 6398]",,SCORE_ERR,"|z|\le R,",HTTP Error 500: Internal Server Error
+p-73,7,"[673, 6465, 3877, 6882]",0.9755,OK,"r_{N}(z+w)\ll\sum_{n=N+1}^{\infty}\frac{1}{n^{x+1}}\leq\int_{N}^{\infty}\frac{dn}{n^{x+1}}=\frac{1}{xN^{x}},",
+p-73,8,"[987, 7230, 4026, 7681]",0.979,OK,S_{N}(w-z)\ll\sum_{n=1}^{N}n^{x-1}\leq N^{x-1}+\int_{0}^{N}n^{x-1}dn,
+p-74,1,"[1725, 627, 3017, 1027]",,SCORE_ERR,=N^{x}\left(\frac{1}{N}+\frac{1}{x}\right).,HTTP Error 500: Internal Server Error
+p-74,2,"[1095, 1347, 3942, 2195]",,SCORE_ERR,"\begin{array}{l} \left[ r_{N}(z + w) N^{z} - \frac{S_{N}(w - z)}{N^{z}} \right] \left( \frac{1}{z} + \frac{z}{R^{2}} \right) \\ \ll \left( \frac{1}{x} + \frac{1}{x} + \frac{1}{N} \right) \frac{2 x}{R^{2}} \leq \frac{4}{R^{2}} + \frac{2}{R N}, \end{array}",HTTP Error 500: Internal Server Error
+p-74,3,"[381, 2716, 4615, 3129]",0.9538,OK,\int_{A}\left[r_{N}(z+w)N^{z}-\frac{S_{N}(w-z)}{N^{z}}\right]\left(\frac{1}{z}+\frac{z}{R^{2}}\right)dz\ll\frac{4\pi}{R}+\frac{2\pi}{N}.,
+p-74,4,"[975, 3534, 4064, 4835]",,SCORE_ERR,\begin{array}{l} \int_{B} F(z + w) N^{z} \left(\frac{1}{z} + \frac{z}{R^{2}}\right) d z \\ \ll \int_{- R}^{R} M \cdot N^{-\delta} \frac{2}{\delta} d y + 2 M \int_{-\delta}^{0} n^{x} \frac{2 | x |}{R^{2}} \frac{3}{2} d x \\ \leq \frac{4 M R}{\delta N^{\delta}} + \frac{6 M}{R^{2} \log^{2} N}. \end{array},HTTP Error 500: Internal Server Error
+p-74,5,"[826, 5155, 4179, 5560]",,SCORE_ERR,"F(w)-S_{N}(w)\ll\frac{2}{R}+\frac{1}{N}+\frac{MR}{\delta N^{\delta}}+\frac{M}{R^{2}\log^{2}N},",HTTP Error 500: Internal Server Error
+p-75,1,"[860, 1141, 4117, 2572]",,SCORE_ERR,\begin{array}{l} - \frac{\zeta^{\prime}}{\zeta}(z) = - \frac{d}{d z} \log \zeta(z) = - \frac{d}{d z} \log \prod_{p} \frac{1}{1 - p^{- z}} \\ = \sum_{p} \frac{d}{d z} \log (1 - p^{- z}) = \sum_{p} \frac{p^{- z} \log p}{1 - p^{- z}} \\ = \sum_{p} \frac{\log p}{p^{- z} - 1}. \\ \end{array},HTTP Error 500: Internal Server Error
+p-75,2,"[537, 3961, 4491, 4381]",0.9665,OK,"\frac{1}{\zeta}(z)[-\zeta^{\prime}(z)-\zeta(z)]=\sum\frac{\mu(n)}{n^{z}}\left[\sum\frac{\log n}{n^{z}}-\sum\frac{d(n)}{n^{z}}\right],",
+p-75,3,"[990, 4734, 4049, 5626]",0.0,CHECK,"\begin{array}{l} \frac{1}{N} \sum_{ab \leq N} \mu(a)[\log b - d(b)] \\ = \frac{1}{N} \sum_{ab < N} \mu(a)[\log b - d(b) + 2\gamma] - \frac{2\gamma}{N}, \end{array}",
+p-75,4,"[1715, 6023, 3298, 6491]",,SCORE_ERR,\sum_{b=1}^{K}[\log b-d(b)+2\gamma],HTTP Error 500: Internal Server Error
+p-75,5,"[1792, 7254, 3233, 7678]",0.9525,OK,"\frac{1}{N}\sum_{n\leq N}\mu(n)\ll\delta(N),",
+p-76,1,"[573, 1356, 4420, 2077]",0.9634,OK,"\begin{array}{l} \sum_{n \leq N} \Lambda(n) = N + O \left[ \frac{N}{\sqrt{w(N)}} \right] + O \left[ N w(N) \delta \left[ \frac{N}{w(N)} \right] \right] \\ = N + o(N), \\ \end{array}",
+p-76,2,"[1446, 3402, 3552, 3825]",0.9832,OK,"\sum_{p\leq n}\frac{\log p}{p}-\log n\quad\text{is bounded},",
+p-76,3,"[1182, 4600, 3826, 5035]",,SCORE_ERR,"\sum_{p\leq n}\frac{\log p}{p}-\log n\quad\text{converges to a limit},",HTTP Error 500: Internal Server Error
+p-76,4,"[800, 5986, 4216, 6445]",0.9843,OK,f(z)=\sum_{n=1}^{\infty}\frac{1}{n^{z}}\left(\sum_{p\leq n}\frac{\log p}{p}\right)=\sum_{p}\frac{\log p}{p}\left[\sum_{n\geq p}\frac{1}{n^{z}}\right].,
+p-76,5,"[1090, 6782, 3912, 7693]",,SCORE_ERR,\begin{array}{l} \sum_{n \geq p} \frac{1}{n^{z}} = \frac{1}{(z - 1) p^{z - 1}} + z \int_{p}^{\infty} \frac{1 - \{t\}}{t^{z + 1}} d t \\ = \frac{p}{(z - 1)} \left(\frac{1}{p^{z} - 1} + A_{p} (z)\right) \\ \end{array},HTTP Error 500: Internal Server Error
+p-77,1,"[1626, 895, 3396, 1296]",,SCORE_ERR,\frac{1}{p^{x}(p^{x}-1)}+\frac{|z(z-1)|}{xp^{x+1}}.,HTTP Error 500: Internal Server Error
+p-77,2,"[1202, 1568, 3800, 2177]",,SCORE_ERR,"f(z)=\frac{1}{z-1}\left[\sum_{p}\frac{\log p}{p^{z}-1}+A(z)\right],",HTTP Error 500: Internal Server Error
+p-77,3,"[1548, 2690, 3441, 3111]",,SCORE_ERR,"\sum_{p}\frac{\log p}{p^{z}-1}=\frac{-d}{dz}\log\zeta(z),",HTTP Error 500: Internal Server Error
+p-77,4,"[1181, 3819, 3805, 4175]",0.9725,OK,F(z)=f(z)+\zeta^{\prime}(z)-c\zeta(z)=\sum_{n}\frac{a_{n}}{n^{z}},
+p-77,5,"[1533, 4488, 3458, 4893]",0.9882,OK,"a_{n}=\sum_{p\leq n}\frac{\log p}{p}-\log n-c,",
+p-77,6,"[1842, 5414, 3166, 5745]",0.9785,OK,"\sum\frac{a_{n}}{n}\quad\text{converges},",
+p-77,7,"[2007, 6446, 3007, 6896]",0.9736,OK,\sum_{N}^{N(1+\epsilon)}\frac{a_{n}}{n}\leq\epsilon^{2},
+p-77,8,"[1920, 7210, 3087, 7675]",,SCORE_ERR,\sum_{N(1-\epsilon)}^{N}\frac{a_{n}}{n}\geq-\epsilon^{2}.,HTTP Error 500: Internal Server Error
+p-78,1,"[467, 1126, 4255, 1575]",0.9604,OK,a_{N}\ll\epsilon+\frac{\epsilon^{2}}{\sum_{N}^{N(1+\epsilon)}\frac{1}{n}}\ll\epsilon+\frac{\epsilon^{2}}{N\epsilon/N(1+\epsilon)}=2\epsilon+\epsilon^{2}.,
+p-78,2,"[1255, 2109, 3745, 2569]",0.9799,OK,"\sum_{N(1-\epsilon)}^{N}\frac{a_{n}}{n}\leq\left(a_{N}+\frac{\epsilon}{1-\epsilon}\right)\sum_{N(1-\epsilon)}^{N}\frac{1}{n},",
+p-78,3,"[505, 2916, 4486, 3375]",0.9166,OK,a_{N} \geq \frac{-\epsilon}{1-\epsilon}-\frac{\epsilon^{2}}{\sum_{N(1-\epsilon)}^N\frac{1}{n}} \geq \frac{-\epsilon}{1-\epsilon}-\frac{\epsilon^{2}}{N\epsilon/N}=\frac{\epsilon^{2}-2\epsilon}{1-\epsilon}.,

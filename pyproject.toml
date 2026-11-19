@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pmocr"
+version = "0.2.0"
+description = "两段式扫描 PDF → Markdown 的公式复核：裁图、xelatex 重渲染、Jev 打分、四类分流"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+dependencies = [
+    "Pillow>=10",
+    "PyMuPDF>=1.24",
+]
+
+[project.scripts]
+pmocr = "pmocr.cli:main"
+
+[tool.setuptools]
+packages = ["pmocr"]

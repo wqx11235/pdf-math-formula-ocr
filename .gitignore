@@ -1,8 +1,14 @@
 __pycache__/
 *.py[cod]
-.venv/
-venv*/
+*.egg-info/
+build/
+dist/
+
+# 本地运行产物
 out/
-qc*/
-*.log
-.DS_Store
+.testtmp/
+.smoke/
+.tmp-*
+
+# 机器相关配置（含绝对路径），不要提交
+config/config.json
