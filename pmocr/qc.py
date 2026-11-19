@@ -1,0 +1,212 @@
+"""复核服务：编排「裁图 → 渲染 → 打分」，产出逐块结论。
+
+这一层只做顺序与错误分流，具体动作都在 geometry / latex / jev / paths 里。
+四个判定：
+
+  OK           分数 ≥ 阈值，可直接信
+  CHECK        分数低，可能错，优先人工看
+  RENDER_FAIL  候选 LaTeX 编不出 PDF（编不过本身就是强信号）
+  SCORE_ERR    服务失败没打分，未打分 ≠ 错，需核对而非纠错
+"""
+
+from __future__ import annotations
+
+import sys
+from contextlib import closing
+from dataclasses import dataclass
+from pathlib import Path
+from typing import Callable, Sequence
+
+from . import latex
+from .config import Config
+from .errors import JevError, PmocrError
+from .geometry import Size, fit_max_side, scale_bbox
+from .jev import JevClient
+from .ocr import FormulaBlock, load_page
+from .paths import OutputLayout, PageRef
+
+VERDICT_OK = "OK"
+VERDICT_CHECK = "CHECK"
+VERDICT_RENDER_FAIL = "RENDER_FAIL"
+VERDICT_SCORE_ERR = "SCORE_ERR"
+
+NON_OK = (VERDICT_CHECK, VERDICT_RENDER_FAIL, VERDICT_SCORE_ERR)
+
+
+@dataclass(frozen=True)
+class BlockResult:
+    page_id: str
+    index: int
+    bbox: tuple[float, float, float, float]
+    tex: str
+    verdict: str
+    score: float | None = None
+    note: str = ""
+
+    @property
+    def passed_automatically(self) -> bool:
+        return self.verdict == VERDICT_OK
+
+
+@dataclass(frozen=True)
+class RunSummary:
+    results: tuple[BlockResult, ...]
+    skipped_pages: tuple[str, ...]
+
+    def count(self, verdict: str) -> int:
+        return sum(1 for item in self.results if item.verdict == verdict)
+
+    @property
+    def review_needed(self) -> int:
+        return sum(1 for item in self.results if not item.passed_automatically)
+
+
+def run(
+    pages: Sequence[PageRef],
+    layout: OutputLayout,
+    cfg: Config,
+    *,
+    client: JevClient | None = None,
+    renderer: Callable[..., latex.RenderResult] = latex.render,
+    log: Callable[[str], None] | None = None,
+) -> RunSummary:
+    """逐页逐块复核。单块失败只记账，不中断整批。"""
+    say = log or (lambda message: print(message, file=sys.stderr))
+    jev = client or JevClient.from_config(cfg)
+    results: list[BlockResult] = []
+    skipped: list[str] = []
+
+    for ref in pages:
+        if not ref.usable:
+            skipped.append(ref.page_id)
+            say("[skip] 缺页面图 %s" % ref.page_id)
+            continue
+        try:
+            page = load_page(ref)
+        except PmocrError as exc:
+            skipped.append(ref.page_id)
+            say("[skip] %s 块级数据不可用: %s" % (ref.page_id, exc))
+            continue
+
+        with closing(_open_image(ref.image_path)) as image:
+            page_size = Size(image.width, image.height)
+            for block in page.blocks:
+                results.append(
+                    evaluate_block(
+                        block=block,
+                        page_image=image,
+                        page_size=page_size,
+                        source_size=page.image_size,
+                        layout=layout,
+                        cfg=cfg,
+                        client=jev,
+                        renderer=renderer,
+                    )
+                )
+        say("[done] %s 公式块 %d" % (ref.page_id, len(page.blocks)))
+
+    return RunSummary(results=tuple(results), skipped_pages=tuple(skipped))
+
+
+def evaluate_block(
+    *,
+    block: FormulaBlock,
+    page_image,
+    page_size: Size,
+    source_size: Size,
+    layout: OutputLayout,
+    cfg: Config,
+    client: JevClient,
+    renderer: Callable[..., latex.RenderResult] = latex.render,
+) -> BlockResult:
+    """单块：裁图 → 渲染 → 打分。任何一步失败都转成判定，不抛给上层。"""
+    try:
+        region = _save_region(block, page_image, page_size, source_size, layout, cfg)
+    except (PmocrError, OSError, ValueError) as exc:
+        return _result(block, VERDICT_RENDER_FAIL, note="裁图失败: %s" % exc)
+
+    rendered = renderer(block.tex, layout.render_dir, _render_name(block), cfg)
+    if not rendered.ok:
+        return _result(block, VERDICT_RENDER_FAIL, note=rendered.error)
+
+    candidate = _shrink(rendered.png, cfg.max_image_side)
+    try:
+        score = client.score(region, block.tex, candidate)
+    except JevError as exc:
+        return _result(block, VERDICT_SCORE_ERR, note=str(exc)[:200])
+    # 判定用落盘值（4 位小数），否则 CSV 里会出现「score=0.6 却是 CHECK」的自相矛盾
+    stored = round(score, 4)
+    verdict = VERDICT_OK if stored >= cfg.threshold else VERDICT_CHECK
+    return _result(block, verdict, score=stored)
+
+
+def _result(
+    block: FormulaBlock,
+    verdict: str,
+    *,
+    score: float | None = None,
+    note: str = "",
+) -> BlockResult:
+    return BlockResult(
+        page_id=block.page_id,
+        index=block.index,
+        bbox=block.bbox,
+        tex=block.tex,
+        verdict=verdict,
+        score=score,
+        note=note,
+    )
+
+
+def _render_name(block: FormulaBlock) -> str:
+    return "%s_b%d" % (block.page_id, block.index)
+
+
+def _save_region(
+    block: FormulaBlock,
+    page_image,
+    page_size: Size,
+    source_size: Size,
+    layout: OutputLayout,
+    cfg: Config,
+) -> Path:
+    box = scale_bbox(block.bbox, source_size, page_size, cfg.crop_padding)
+    region = page_image.crop(box)
+    if region.width <= 0 or region.height <= 0:
+        raise PmocrError("裁出空图")
+    region = _resize(region, cfg.max_image_side)
+    path = layout.crop_path(block.page_id, block.index)
+    region.save(path)
+    return path
+
+
+def _shrink(path: Path, max_side: int) -> Path:
+    """Jev 对超宽图会直接 500，渲染图也要限宽（多行 array 会渲得很宽）。"""
+    from PIL import Image
+
+    with Image.open(path) as image:
+        target = fit_max_side(Size(image.width, image.height), max_side)
+        if target.width == image.width and target.height == image.height:
+            return path
+        resized = image.resize((target.width, target.height), Image.LANCZOS)
+    resized.save(path)
+    return path
+
+
+def _resize(image, max_side: int):
+    target = fit_max_side(Size(image.width, image.height), max_side)
+    if target.width == image.width and target.height == image.height:
+        return image
+    from PIL import Image
+
+    return image.resize((target.width, target.height), Image.LANCZOS)
+
+
+def _open_image(path: Path | None):
+    from PIL import Image
+
+    if path is None:  # pragma: no cover - run() 已过滤
+        raise PmocrError("页面图缺失")
+    image = Image.open(path)
+    image.load()
+    return image

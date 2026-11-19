@@ -1,0 +1,14 @@
+{
+  "jev_url": "http://127.0.0.1:18499",
+  "jev_model": "jev",
+  "jev_timeout": 300,
+  "jev_retries": 2,
+  "jev_backoff": 1.5,
+  "threshold": 0.6,
+  "max_image_side": 1600,
+  "crop_padding": 8,
+  "render_dpi": 300,
+  "render_timeout": 120,
+  "tex_bin_dir": "D:\\Texlive\\texlive\\2025\\bin\\windows",
+  "temp_dir": ""
+}
