@@ -102,6 +102,26 @@ class RenderTests(unittest.TestCase):
         render("x^2", self.tmp, "b5", cfg, runner=capture)
         self.assertTrue(seen["env"]["PATH"].startswith("C:/tex/bin" + os.pathsep))
 
+    def test_tex_temp_dir_is_created_and_writable(self) -> None:
+        seen = {}
+
+        def capture(cmd, **kwargs):
+            seen.update(kwargs)
+            return _completed(1)
+
+        render("x^2", self.tmp, "b6", self.cfg, runner=capture)
+        self.assertEqual(seen["env"]["TMP"], seen["env"]["TEMP"])
+        self.assertTrue(Path(seen["env"]["TMP"]).is_dir())
+        self.assertEqual(Path(seen["env"]["TMP"]), self.tmp / ".tex-tmp")
+
+    def test_zero_byte_pdf_counts_as_failure(self) -> None:
+        def broken(cmd, **kwargs):
+            (self.tmp / "b7.pdf").write_bytes(b"")
+            return _completed(0)
+
+        result = render("x^2", self.tmp, "b7", self.cfg, runner=broken)
+        self.assertFalse(result.ok)
+
     @unittest.skipUnless(os.environ.get("PMOCR_TEST_TEX") and tex_available(), "需要真 TeX 环境（PMOCR_TEST_TEX=1）")
     def test_real_xelatex(self) -> None:
         cfg = Config.load(None, environ={})

@@ -84,7 +84,7 @@ def render(
         proc = run(
             cmd,
             cwd=str(workdir),
-            env=_tex_env(cfg),
+            env=_tex_env(cfg, workdir),
             capture_output=True,
             text=True,
             timeout=cfg.render_timeout,
@@ -95,7 +95,7 @@ def render(
     except subprocess.TimeoutExpired:
         return RenderResult(None, "xelatex 超时（%.0fs）" % cfg.render_timeout)
 
-    if not pdf_path.exists():
+    if not pdf_path.exists() or pdf_path.stat().st_size == 0:
         return RenderResult(None, output[-400:])
     try:
         _pdf_to_png(pdf_path, png_path, cfg.render_dpi)
@@ -104,13 +104,19 @@ def render(
     return RenderResult(png_path)
 
 
-def _tex_env(cfg: Config) -> dict[str, str]:
+def _tex_env(cfg: Config, workdir: Path) -> dict[str, str]:
+    """xelatex 的 TMP/TEMP 必须指向可写目录。
+
+    实测：TMP 不可写时 xdvipdfmx 会以 driver return code 崩溃，留下 0 字节 PDF，
+    看起来像「候选 LaTeX 坏了」，实际是环境问题。旧单文件脚本显式设过 TMP，
+    拆分时漏了，这里补回并默认落到本次渲染目录下。
+    """
     env = dict(os.environ)
     if cfg.tex_bin_dir:
         env["PATH"] = cfg.tex_bin_dir + os.pathsep + env.get("PATH", "")
-    if cfg.temp_dir:
-        Path(cfg.temp_dir).mkdir(parents=True, exist_ok=True)
-        env["TMP"] = env["TEMP"] = cfg.temp_dir
+    temp = Path(cfg.temp_dir) if cfg.temp_dir else Path(workdir) / ".tex-tmp"
+    temp.mkdir(parents=True, exist_ok=True)
+    env["TMP"] = env["TEMP"] = str(temp)
     return env
 
 
