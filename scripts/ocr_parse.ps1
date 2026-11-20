@@ -56,31 +56,37 @@ function Read-Settings {
     return $merged
 }
 
+function Get-Setting {
+    param([hashtable]$Settings, [string]$Key)
+    if ($Settings.ContainsKey($Key)) { return $Settings[$Key] }
+    return $null
+}
+
 function Resolve-Paths {
     param([hashtable]$Settings)
 
-    $root = if ($MinicpmRoot) { $MinicpmRoot } else { $Settings.minicpm_root }
+    $root = if ($MinicpmRoot) { $MinicpmRoot } else { $Settings['minicpm_root'] }
     $root = [System.IO.Path]::GetFullPath($root)
 
     if ($PythonExe) { $python = $PythonExe }
-    elseif ($Settings.python_exe) { $python = $Settings.python_exe }
+    elseif (Get-Setting $Settings 'python_exe') { $python = Get-Setting $Settings 'python_exe' }
     else { $python = Join-Path $root 'venv312\Scripts\python.exe' }
 
     if ($OllamaExe) { $ollama = $OllamaExe }
-    elseif ($Settings.ollama_exe) { $ollama = $Settings.ollama_exe }
+    elseif (Get-Setting $Settings 'ollama_exe') { $ollama = Get-Setting $Settings 'ollama_exe' }
     else { $ollama = Join-Path (Split-Path $root -Parent) 'ollama-app\ollama.exe' }
 
     if ($LayoutModel) { $layout = $LayoutModel }
-    elseif ($Settings.layout_model) { $layout = $Settings.layout_model }
+    elseif (Get-Setting $Settings 'layout_model') { $layout = Get-Setting $Settings 'layout_model' }
     else { $layout = Join-Path $root 'models\PP-DocLayoutV3_infer' }
 
     if ($ServerUrl) { $server = $ServerUrl }
-    elseif ($Settings.server_url) { $server = $Settings.server_url }
-    else { $server = $Defaults.server_url }
+    elseif (Get-Setting $Settings 'server_url') { $server = Get-Setting $Settings 'server_url' }
+    else { $server = $Defaults['server_url'] }
 
     if ($Model) { $model = $Model }
-    elseif ($Settings.model) { $model = $Settings.model }
-    else { $model = $Defaults.model }
+    elseif (Get-Setting $Settings 'model') { $model = Get-Setting $Settings 'model' }
+    else { $model = $Defaults['model'] }
 
     return @{
         Root   = $root
