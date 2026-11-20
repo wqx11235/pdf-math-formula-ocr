@@ -11,5 +11,7 @@
   "render_timeout": 120,
   "page_edge": 8157,
   "tex_bin_dir": "D:\\Texlive\\texlive\\2025\\bin\\windows",
+  "minicpm_root": "D:\\deepseek_harness\\.minicpm-ocr",
   "temp_dir": ""
 }
+

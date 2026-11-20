@@ -44,6 +44,7 @@ class Config:
     tex_bin_dir: str = ""
 
     # --- 运行环境 ---
+    minicpm_root: str = ""
     temp_dir: str = ""
 
     @classmethod

@@ -30,8 +30,6 @@ VERDICT_CHECK = "CHECK"
 VERDICT_RENDER_FAIL = "RENDER_FAIL"
 VERDICT_SCORE_ERR = "SCORE_ERR"
 
-NON_OK = (VERDICT_CHECK, VERDICT_RENDER_FAIL, VERDICT_SCORE_ERR)
-
 
 @dataclass(frozen=True)
 class BlockResult:
@@ -210,3 +208,4 @@ def _open_image(path: Path | None):
     image = Image.open(path)
     image.load()
     return image
+

@@ -25,10 +25,6 @@ class MergeSummary:
     path: Path
     size: int
 
-    @property
-    def skipped(self) -> int:
-        return 0
-
 
 def page_number(filename: str) -> int:
     """从 ``p-07.md`` 里取 7；取不到算 0。"""
@@ -91,3 +87,4 @@ def main(argv: Sequence[str] | None = None) -> int:
 
 if __name__ == "__main__":  # pragma: no cover
     raise SystemExit(main())
+

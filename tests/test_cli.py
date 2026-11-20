@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import unittest
+from pathlib import Path
 from unittest import mock
 
 from pmocr import qc
@@ -108,6 +109,27 @@ class MergeCommandTests(unittest.TestCase):
     def test_missing_pages_dir_returns_error(self) -> None:
         tmp = make_tmp()
         self.assertEqual(main(["merge", "--pages", str(tmp / "nope"), "--out", str(tmp / "b.md"), "--title", "x"]), 2)
+
+
+class RunCommandTests(unittest.TestCase):
+    def test_run_command_delegates_to_pipeline(self) -> None:
+        from pmocr import pipeline
+
+        tmp = make_tmp()
+        fake = pipeline.BookRun(
+            pages=2, blocks=3, review=1, skipped_pages=(),
+            pages_dir=tmp / "pages", qc_dir=tmp / "qc", book=tmp / "book.md",
+        )
+        with mock.patch.object(pipeline, "run_book", return_value=fake) as patched:
+            code = main(["run", "--pdf", str(tmp / "b.pdf"), "--title", "书", "--out", str(tmp / "w")])
+        self.assertEqual(code, 0)
+        kwargs = patched.call_args.kwargs
+        self.assertEqual(kwargs["title"], "书")
+        self.assertEqual(Path(kwargs["pdf"]), tmp / "b.pdf")
+
+    def test_run_requires_pdf_and_title(self) -> None:
+        with self.assertRaises(SystemExit):
+            main(["run", "--pdf", "x.pdf"])
 
 
 class ParserTests(unittest.TestCase):

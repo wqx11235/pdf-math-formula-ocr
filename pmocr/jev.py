@@ -19,7 +19,6 @@ from typing import Callable
 from .config import Config
 from .errors import JevError
 
-Question = dict
 Sleeper = Callable[[float], None]
 
 
@@ -114,3 +113,4 @@ def _b64(path: Path) -> str:
         return base64.b64encode(Path(path).read_bytes()).decode("ascii")
     except OSError as exc:
         raise JevError("读图失败: %s (%s)" % (path, exc)) from exc
+

@@ -32,22 +32,29 @@
 
 环境（模型、Ollama 解压版、Python SDK、版面模型、TeX）见 [docs/流程.md](docs/流程.md)，一次性装好。
 
-```powershell
-# 0) 配置：复制后改成自己机器上的路径（config.json 不提交）
-Copy-Item config/config.example.json config/config.json
+**一条命令跑完一本书**（PDF 进、成稿出，中间产物都留在 `work/` 里）：
 
+```powershell
+Copy-Item config/config.example.json config/config.json   # 只需一次，改成自己机器的路径
+python -m pmocr run --pdf 'D:\书\GTM177.pdf' --title '解析数论' --subtitle 'GTM177'
+```
+
+跑完会打印页数、公式块数、待复核数，并给出 `work\book.md` 与 `work\qc\formula_qc.csv`。
+要分开跑（改某一步、只重跑复核）时，用下面四个子命令：
+
+```powershell
 # 1) PDF → 页图（p-01.png ...，断点续跑）
 python -m pmocr render --pdf 'D:\书\GTM177.pdf' --out .\work\pages
 
 # 2) 整页解析 → 每页一份 md + 块级 JSON
-.\scripts\ocr_parse.ps1 -InputPath .\work\pages -Out .\work\out
+.\scripts\ocr_parse.ps1 -InputPath .\work\pages -Out .\work\md
 
 # 3) 公式复核 → CSV + 待复核清单
 python -m pmocr qc --pages <runs>\<最新>\pages_json --images .\work\pages `
                    --out .\work\qc --config config\config.json
 
 # 4) 合并成稿
-python -m pmocr merge --pages .\work\out --out .\work\GTM177.md `
+python -m pmocr merge --pages .\work\md --out .\work\book.md `
                       --title '解析数论' --subtitle 'GTM177'
 
 # 可选：量一下复核值不值（三臂对比 + 阈值扫描）
@@ -98,6 +105,7 @@ python -m pmocr.experiment --csv .\work\qc\formula_qc.csv --md 报告.md
 | `jev.py` | 打分客户端：5xx 退避重试、4xx 立刻失败 |
 | `ocr.py` | 解析块级 JSON，抽出公式块 |
 | `qc.py` | 编排裁图 → 渲染 → 打分 → 四类判定；单块失败不中断 |
+| `pipeline.py` | 一键流程：render → 解析 → qc → merge，四步产物都落盘 |
 | `merge.py` | 逐页 Markdown → 一本成稿（保留下游格式） |
 | `report.py` | CSV 写出/读回、Markdown 报告分节 |
 | `experiment.py` | 三臂对比、标签指标、阈值扫描 |
@@ -122,7 +130,7 @@ $env:PMOCR_THRESHOLD = '0.6'
 python -m unittest discover -s tests -t .
 ```
 
-121 个用例，默认不联网、不占 GPU、不依赖真 TeX（真编译用例需 `PMOCR_TEST_TEX=1`）。
+131 个用例，默认不联网、不占 GPU、不依赖真 TeX（真编译用例需 `PMOCR_TEST_TEX=1`）。
 覆盖：配置优先级与校验、bbox 换算、定界符清洗、渲染失败/超时/0 字节 PDF、Jev 重试与不重试、
 四类判定分流、报告分节、标签指标与阈值扫描、重复标签防护、PDF 渲染与成稿合并、入口退出码。
 
@@ -159,4 +167,5 @@ tests/              单元测试
 ## License
 
 MIT
+
 

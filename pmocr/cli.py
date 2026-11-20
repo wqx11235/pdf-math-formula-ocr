@@ -8,12 +8,15 @@ from __future__ import annotations
 
 import argparse
 import sys
+from pathlib import Path
 from typing import Sequence
 
-from . import merge, qc, render, report
+from . import merge, pipeline, qc, render, report
 from .config import Config
 from .errors import PmocrError
 from .paths import OutputLayout, discover_pages, prepare_outputs
+
+REPO_ROOT = Path(__file__).resolve().parent.parent
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -22,10 +25,27 @@ def build_parser() -> argparse.ArgumentParser:
         description="扫描 PDF → Markdown 的两段式流程：render（PDF→页图）/ qc（公式复核）/ merge（成稿）",
     )
     sub = parser.add_subparsers(dest="command", required=True)
+    _add_run(sub)
     _add_qc(sub)
     _add_render(sub)
     _add_merge(sub)
     return parser
+
+
+def _add_run(sub) -> None:
+    parser = sub.add_parser("run", help="一键：PDF → 页图 → 解析 → 复核 → 成稿")
+    parser.add_argument("--pdf", required=True, help="PDF 路径")
+    parser.add_argument("--title", required=True, help="书名（写进成稿标题）")
+    parser.add_argument("--out", default="work", help="工作目录，默认 ./work")
+    parser.add_argument("--config", help="配置文件路径（JSON）")
+    parser.add_argument("--subtitle", default="", help="副标题")
+    parser.add_argument("--note", default="", help="书名下的说明")
+    parser.add_argument("--skip", default="", help="合并时跳过的页码，逗号分隔")
+    parser.add_argument("--edge", type=int, help="页图长边像素，默认取配置")
+    parser.add_argument("--keep-pages", action="store_true", help="保留页图（默认复核后删除）")
+    parser.add_argument("--minicpm-root", help="模型/环境根目录，默认取配置")
+    _add_qc_overrides(parser)
+    parser.set_defaults(func=_run_book)
 
 
 def _add_qc(sub) -> None:
@@ -34,12 +54,16 @@ def _add_qc(sub) -> None:
     parser.add_argument("--images", required=True, help="页面 PNG 目录（p-01.png ...）")
     parser.add_argument("--out", required=True, help="报告输出目录")
     parser.add_argument("--config", help="配置文件路径（JSON）")
+    _add_qc_overrides(parser)
+    parser.set_defaults(func=_run_qc)
+
+
+def _add_qc_overrides(parser) -> None:
     parser.add_argument("--threshold", type=float, help="低分阈值，默认取配置")
     parser.add_argument("--jev-url", help="Jev 服务地址，默认取配置")
     parser.add_argument("--jev-model", help="Jev 模型名，默认取配置")
     parser.add_argument("--max-image-side", type=int, help="送打分的最长边，默认取配置")
     parser.add_argument("--tex-bin-dir", help="xelatex 所在目录，默认用 PATH")
-    parser.set_defaults(func=_run_qc)
 
 
 def _add_render(sub) -> None:
@@ -70,6 +94,26 @@ def main(argv: Sequence[str] | None = None) -> int:
     except PmocrError as exc:
         print("[error] %s" % exc, file=sys.stderr)
         return 2
+
+
+def _run_book(args: argparse.Namespace) -> int:
+    overrides = dict(_qc_overrides(args))
+    overrides.update(page_edge=args.edge, minicpm_root=args.minicpm_root)
+    cfg = Config.load(args.config, overrides=overrides)
+    result = pipeline.run_book(
+        pdf=args.pdf,
+        title=args.title,
+        workdir=args.out,
+        cfg=cfg,
+        repo_root=REPO_ROOT,
+        subtitle=args.subtitle,
+        note=args.note,
+        skip=_skip_numbers(args.skip),
+        keep_pages=args.keep_pages,
+    )
+    for line in result.as_lines():
+        print(line)
+    return 0
 
 
 def _run_qc(args: argparse.Namespace) -> int:
