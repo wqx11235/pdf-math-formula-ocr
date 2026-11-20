@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 424" width="980" height="424" role="img" aria-label="四类判定分流与人工处置">
+  <defs>
+    <marker id="a3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#8c959f"/>
+    </marker>
+  </defs>
+  <rect width="980" height="424" fill="#ffffff"/>
+  <text x="30" y="32" font-family="Segoe UI, Microsoft YaHei, sans-serif" font-size="19" font-weight="600" fill="#1f2328">四类判定：3,382 个公式块怎么分流</text>
+  <text x="30" y="53" font-family="Segoe UI, Microsoft YaHei, sans-serif" font-size="12.5" fill="#57606a">「可能错」和「没打分」必须分开写清单——混在一起会让人带着找错的心态看 500 块，把对的改错。</text>
+
+  <rect x="30" y="180" width="150" height="70" rx="8" fill="#f6f8fa" stroke="#8c959f"/>
+  <text x="105" y="208" text-anchor="middle" font-family="Segoe UI, Microsoft YaHei, sans-serif" font-size="14" font-weight="600" fill="#1f2328">公式块</text>
+  <text x="105" y="230" text-anchor="middle" font-family="Segoe UI, Microsoft YaHei, sans-serif" font-size="18" font-weight="600" fill="#1f2328">3,382</text>
+
+  <g stroke="#8c959f" stroke-width="1.4" fill="none" marker-end="url(#a3)">
+    <path d="M182 200 L240 120"/>
+    <path d="M182 212 L240 182"/>
+    <path d="M182 220 L240 244"/>
+    <path d="M182 232 L240 306"/>
+  </g>
+
+  <g font-family="Segoe UI, Microsoft YaHei, sans-serif">
+    <rect x="250" y="86" width="700" height="62" rx="8" fill="#dafbe1" stroke="#4ac26b"/>
+    <text x="272" y="112" font-size="14.5" font-weight="600" fill="#04430f">OK · 2,221（65.7%）</text>
+    <text x="272" y="134" font-size="12" fill="#04430f">分数 ≥ 阈值，直接出版；人工不用看</text>
+
+    <rect x="250" y="152" width="700" height="62" rx="8" fill="#fff8c5" stroke="#d4a72c"/>
+    <text x="272" y="178" font-size="14.5" font-weight="600" fill="#4d2d00">CHECK · 370（10.9%）</text>
+    <text x="272" y="200" font-size="12" fill="#4d2d00">分数低于阈值，可能错；真错就是在这一栏抓到的（如 0.2736 那块）</text>
+
+    <rect x="250" y="218" width="700" height="62" rx="8" fill="#ffebe9" stroke="#ff8182"/>
+    <text x="272" y="244" font-size="14.5" font-weight="600" fill="#82071e">RENDER_FAIL · 511（15.1%）</text>
+    <text x="272" y="266" font-size="12" fill="#82071e">候选 LaTeX 编不过；编不过本身就是硬错误，不需要 GPU</text>
+
+    <rect x="250" y="284" width="700" height="62" rx="8" fill="#f6f8fa" stroke="#afb8c1"/>
+    <text x="272" y="310" font-size="14.5" font-weight="600" fill="#1f2328">SCORE_ERR · 280（8.3%）</text>
+    <text x="272" y="332" font-size="12" fill="#1f2328">服务失败没打分（500 / 超时）；未打分 ≠ 错，是核对不是纠错</text>
+  </g>
+
+  <g font-family="Segoe UI, Microsoft YaHei, sans-serif" font-size="12" fill="#57606a">
+    <text x="30" y="384">人工必看 = CHECK + RENDER_FAIL + SCORE_ERR = 1,161 块（34.3%）；剩下 65.7% 自动通过。</text>
+    <text x="30" y="406">数据：GTM001 / GTM002 / GTM177 / GTM178 四本书，阈值 0.6。</text>
+  </g>
+</svg>

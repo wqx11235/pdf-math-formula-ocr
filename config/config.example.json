@@ -9,6 +9,7 @@
   "crop_padding": 8,
   "render_dpi": 300,
   "render_timeout": 120,
+  "page_edge": 8157,
   "tex_bin_dir": "D:\\Texlive\\texlive\\2025\\bin\\windows",
   "temp_dir": ""
 }

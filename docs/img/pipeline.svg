@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 268" width="980" height="268" role="img" aria-label="从扫描 PDF 到成稿的五步流程">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#57606a"/>
+    </marker>
+  </defs>
+  <rect width="980" height="268" fill="#ffffff"/>
+  <text x="30" y="34" font-family="Segoe UI, Microsoft YaHei, PingFang SC, sans-serif" font-size="19" font-weight="600" fill="#1f2328">从扫描 PDF 到成稿：五步，全在一个仓库里</text>
+  <text x="30" y="56" font-family="Segoe UI, Microsoft YaHei, sans-serif" font-size="12.5" fill="#57606a">每一步都有独立入口、独立测试；出问题只看一步，不用读整段脚本。</text>
+
+  <rect x="196" y="70" width="722" height="112" rx="10" fill="none" stroke="#afb8c1" stroke-width="1.4" stroke-dasharray="6 4"/>
+  <text x="208" y="88" font-family="Segoe UI, Microsoft YaHei, sans-serif" font-size="11.5" fill="#57606a">仓库内（可单独跑，也可串联）</text>
+
+  <g font-family="Segoe UI, Microsoft YaHei, sans-serif">
+    <rect x="30" y="96" width="150" height="86" rx="8" fill="#f6f8fa" stroke="#d0d7de"/>
+    <text x="105" y="126" text-anchor="middle" font-size="15" font-weight="600" fill="#1f2328">扫描 PDF</text>
+    <text x="105" y="150" text-anchor="middle" font-size="11.5" fill="#57606a">输入</text>
+    <text x="105" y="170" text-anchor="middle" font-size="11.5" fill="#57606a">82 页 / 本</text>
+
+    <rect x="210" y="96" width="150" height="86" rx="8" fill="#ddf4ff" stroke="#54aeff"/>
+    <text x="285" y="126" text-anchor="middle" font-size="15" font-weight="600" fill="#0a3069">① 页图</text>
+    <text x="285" y="150" text-anchor="middle" font-size="11.5" fill="#0a3069">p-01.png …</text>
+    <text x="285" y="170" text-anchor="middle" font-size="11.5" font-family="Consolas, monospace" fill="#0a3069">pmocr render</text>
+
+    <rect x="390" y="96" width="150" height="86" rx="8" fill="#ddf4ff" stroke="#54aeff"/>
+    <text x="465" y="126" text-anchor="middle" font-size="15" font-weight="600" fill="#0a3069">② 整页解析</text>
+    <text x="465" y="150" text-anchor="middle" font-size="11.5" fill="#0a3069">每页一份 md</text>
+    <text x="465" y="170" text-anchor="middle" font-size="11.5" font-family="Consolas, monospace" fill="#0a3069">ocr_parse.ps1</text>
+
+    <rect x="570" y="96" width="150" height="86" rx="8" fill="#ddf4ff" stroke="#54aeff"/>
+    <text x="645" y="126" text-anchor="middle" font-size="15" font-weight="600" fill="#0a3069">③ 公式复核</text>
+    <text x="645" y="150" text-anchor="middle" font-size="11.5" fill="#0a3069">四类判定</text>
+    <text x="645" y="170" text-anchor="middle" font-size="11.5" font-family="Consolas, monospace" fill="#0a3069">pmocr qc</text>
+
+    <rect x="750" y="96" width="150" height="86" rx="8" fill="#dafbe1" stroke="#4ac26b"/>
+    <text x="825" y="126" text-anchor="middle" font-size="15" font-weight="600" fill="#04430f">④ 成稿</text>
+    <text x="825" y="150" text-anchor="middle" font-size="11.5" fill="#04430f">一本 .md</text>
+    <text x="825" y="170" text-anchor="middle" font-size="11.5" font-family="Consolas, monospace" fill="#04430f">pmocr merge</text>
+  </g>
+
+  <g stroke="#57606a" stroke-width="1.6" marker-end="url(#arrow)" fill="none">
+    <path d="M182 139 L206 139"/>
+    <path d="M362 139 L386 139"/>
+    <path d="M542 139 L566 139"/>
+    <path d="M722 139 L746 139"/>
+  </g>
+
+  <g font-family="Segoe UI, Microsoft YaHei, sans-serif" font-size="12.5" fill="#57606a">
+    <text x="30" y="216">复核只给信号，不改稿：低分块带「可能错」，没打分块带「需核对」，两条清单分开写。</text>
+    <text x="30" y="238">页数、阈值、端口、模型名都在 config.json 里；换机器改配置，不改代码。</text>
+    <text x="30" y="260" font-family="Consolas, monospace" font-size="12" fill="#1a7f37">python -m pmocr.experiment --csv qc/formula_qc.csv   # 量一下复核值不值</text>
+  </g>
+</svg>
