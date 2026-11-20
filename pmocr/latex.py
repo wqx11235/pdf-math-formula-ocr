@@ -17,14 +17,18 @@ from typing import Callable
 from .config import Config
 from .errors import RenderError
 
+# \everymath{\displaystyle} 是必须的，不是审美选择：
+# OCR 把多行公式写成 \begin{array}{l}…\end{array}，而 array 单元格默认按 textstyle 排版，
+# 求和号上下限会跑到右下角、分式变小，和扫描页的 display 排版不一致，Jev 会因此扣分。
+# 22 块实测：均值 0.9470 → 0.9676，其中一块误报 0.4275 → 0.8304。
 TEMPLATE = (
     "\\documentclass[12pt,border=3pt]{standalone}\n"
     "\\usepackage{amsmath}\n"
+    "\\everymath{\\displaystyle}\n"
     "\\begin{document}\n"
     "$\\displaystyle %s$\n"
     "\\end{document}\n"
 )
-
 _LEADING_DELIMS = (re.compile(r"^\s*\\\["), re.compile(r"^\s*\$\$"))
 _TRAILING_DELIMS = (re.compile(r"\\\]\s*$"), re.compile(r"\$\$\s*$"))
 

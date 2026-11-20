@@ -41,6 +41,11 @@ class StripTests(unittest.TestCase):
         self.assertIn("amsmath", doc)
         self.assertIn("$\\displaystyle x^2$", doc)
 
+    def test_document_forces_displaystyle_inside_cells(self) -> None:
+        # array 单元格默认 textstyle，会让 \sum 下限跑到右下角，与印刷版不符
+        doc = build_document("\\begin{array}{l}\\sum_p x\\end{array}")
+        self.assertIn("\\everymath{\\displaystyle}", doc)
+
 
 class RenderTests(unittest.TestCase):
     def setUp(self) -> None:
