@@ -67,6 +67,21 @@ python -m pmocr.experiment --csv .\work\qc\formula_qc.csv --md 报告.md
 | `RENDER_FAIL` | 候选 LaTeX 编不出 PDF | 编不过说明不是可用产物，优先修 |
 | `SCORE_ERR` | 打分服务失败（含重试后仍 500） | 核对而非纠错：**未打分 ≠ 错** |
 
+## 实例（真实产物，非示意）
+
+三张图都是 2026-11-20 在 GTM177 上跑出来的：左边是扫描页裁块，右边是 xelatex 重渲染，分数来自 Jev。
+
+![实例 1：高分正确](docs/img/example-ok.png)
+
+![实例 2：低分但人工核对正确](docs/img/example-check.png)
+
+![实例 3：多行 array 仍通过](docs/img/example-array.png)
+
+- **实例 1（0.9900 OK）**：两边几乎逐字一致，这块不用人看。
+- **实例 2（0.4275 CHECK）**：**最值得看的一张**。低分不等于错——裁块里带了公式编号 `(4.`，候选没带，
+  分数被压低，人工核对其实是正确的。所以 `CHECK` 是「请你看一眼」，不是「这里有错」。
+- **实例 3（0.9199 OK）**：多行 array 也能过；排版差异让分数比单行略低，但内容对得上。
+
 ## 模块
 
 ![模块依赖图](docs/img/modules.svg)
