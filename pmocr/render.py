@@ -27,10 +27,6 @@ class RenderSummary:
     written: int
     skipped: int
 
-    @property
-    def path_hint(self) -> str:
-        return "p-01.png … p-%02d.png" % self.total
-
 
 def page_name(number: int) -> str:
     return "p-%02d.png" % number

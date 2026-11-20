@@ -14,7 +14,7 @@ from pathlib import Path
 from typing import Iterable, Sequence
 
 from .errors import DataError
-from .qc import BlockResult, NON_OK, VERDICT_CHECK, VERDICT_OK, VERDICT_RENDER_FAIL, VERDICT_SCORE_ERR
+from .qc import BlockResult, VERDICT_CHECK, VERDICT_OK, VERDICT_RENDER_FAIL, VERDICT_SCORE_ERR
 
 CSV_FIELDS = ("page", "block", "bbox", "score", "verdict", "tex", "note")
 _UNSCORED = (VERDICT_RENDER_FAIL, VERDICT_SCORE_ERR)
@@ -152,5 +152,5 @@ __all__ = [
     "write_csv",
     "write_markdown",
     "load_results",
-    "NON_OK",
 ]
+
