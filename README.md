@@ -6,8 +6,10 @@
 把可疑的和没打分到的挑出来给人看。第二段存在的理由很具体：整页解析时，长公式会被手写批注、相邻行带歪；
 单独裁块、单独渲染、单独比对，才能把这类错挑出来。
 
-> 本版（0.2.0）把原来的单文件脚本拆成了 `pmocr` 包，并补上了「有 Jev / 没 Jev」的对照组实验。
-> 数字全部来自 4 本书、3,382 个公式块的实测。
+![从扫描 PDF 到成稿的五步流程](docs/img/pipeline.svg)
+
+> 0.3.0 起是**一个仓库跑完整条链**：`render`（PDF→页图）→ `ocr_parse.ps1`（解析）→ `qc`（复核）→ `merge`（成稿），
+> 外加 `experiment`（对照组）。数字全部来自 4 本书、3,382 个公式块的实测。
 
 ## 实测规模（4 本书，3,382 个公式块）
 
@@ -19,13 +21,7 @@
 | GTM178 | 1,211 | 977 | 29 | 72 | 133 | 19.3% |
 | **合计** | **3,382** | **2,221 (65.7%)** | **370 (10.9%)** | **511 (15.1%)** | **280 (8.3%)** | **34.3%** |
 
-三臂对比（同一批块）：
-
-| 臂 | 做法 | 人工必看 | 拦「编不过」 | 标「可能错」 |
-|---|---|---|---|---|
-| A | 无复核，直接出版 | 0 | 否 | 否 |
-| B | 只做 LaTeX 编译检查 | 511（15.1%） | 是 | 否 |
-| C | 编译检查 + Jev 打分 | 1,161（34.3%） | 是 | 是 |
+![三种做法的人工成本对比](docs/img/control-group.svg)
 
 **读法**：Jev 把人工从 100% 压到 34.3%，但其中 23.4 个百分点是「没拿到信号」（编不过 + 500），
 真正靠打分判断出来的只有 10.9 个百分点，精度还未知。**编译检查的收益比 Jev 稳定**——
@@ -37,44 +33,32 @@
 环境（模型、Ollama 解压版、Python SDK、版面模型、TeX）见 [docs/流程.md](docs/流程.md)，一次性装好。
 
 ```powershell
-# 配置：复制后改成自己机器上的路径
+# 0) 配置：复制后改成自己机器上的路径（config.json 不提交）
 Copy-Item config/config.example.json config/config.json
 
-# 第一步：整页解析
-.\scripts\ocr_parse.ps1 -InputPath 'C:\path\to\扫描页' -Out 'D:\work\out'
+# 1) PDF → 页图（p-01.png ...，断点续跑）
+python -m pmocr render --pdf 'D:\书\GTM177.pdf' --out .\work\pages
 
-# 第二步：公式复核
-python -m pmocr --pages <runs>\<最新>\pages_json --images 'C:\path\to\扫描页' `
-                --out 'D:\work\复核' --config config\config.json
+# 2) 整页解析 → 每页一份 md + 块级 JSON
+.\scripts\ocr_parse.ps1 -InputPath .\work\pages -Out .\work\out
 
-# 可选：量一下复核值不值
-python -m pmocr.experiment --csv 'D:\work\复核\formula_qc.csv' --md 报告.md
+# 3) 公式复核 → CSV + 待复核清单
+python -m pmocr qc --pages <runs>\<最新>\pages_json --images .\work\pages `
+                   --out .\work\qc --config config\config.json
+
+# 4) 合并成稿
+python -m pmocr merge --pages .\work\out --out .\work\GTM177.md `
+                      --title '解析数论' --subtitle 'GTM177'
+
+# 可选：量一下复核值不值（三臂对比 + 阈值扫描）
+python -m pmocr.experiment --csv .\work\qc\formula_qc.csv --md 报告.md
 ```
 
-产物：
-
-- `formula_qc.csv`：每块一行（页、块号、bbox、分数、判定、LaTeX、备注）
-- `待复核.md`：分两节——**低分 · 可能错**（优先看）与**未打分 · 需核对**（不是纠错）
-- `_render/`：裁图与渲染产物，排查用
-
-## 模块
-
-| 模块 | 职责 |
-|---|---|
-| `config.py` | 默认值 < JSON < 环境变量 < 命令行；键名校验 |
-| `geometry.py` | bbox 坐标系换算、等比缩放（纯计算） |
-| `paths.py` | 发现输入页、准备输出目录、命名裁图 |
-| `latex.py` | 去定界符、装配 standalone 文档、xelatex → PNG |
-| `jev.py` | 打分客户端：5xx 退避重试、4xx 立刻失败 |
-| `ocr.py` | 解析块级 JSON，抽出公式块 |
-| `qc.py` | 编排裁图 → 渲染 → 打分 → 四类判定；单块失败不中断 |
-| `report.py` | CSV 写出/读回、Markdown 报告分节 |
-| `experiment.py` | 三臂对比、标签指标、阈值扫描 |
-| `cli.py` | 入口：解析参数 → 装配 → 调用 → 打印摘要（无业务逻辑） |
-
-依赖方向与设计取舍见 [docs/架构.md](docs/架构.md)。
+`python -m pmocr.render` / `python -m pmocr.merge` 是 `render` / `merge` 子命令的等价写法。
 
 ## 四个判定
+
+![四类判定的分流](docs/img/verdicts.svg)
 
 | 判定 | 含义 | 人工该做什么 |
 |---|---|---|
@@ -82,6 +66,27 @@ python -m pmocr.experiment --csv 'D:\work\复核\formula_qc.csv' --md 报告.md
 | `CHECK` | 分数低于阈值 | 带着「找错」心态看（这里抓到过真错） |
 | `RENDER_FAIL` | 候选 LaTeX 编不出 PDF | 编不过说明不是可用产物，优先修 |
 | `SCORE_ERR` | 打分服务失败（含重试后仍 500） | 核对而非纠错：**未打分 ≠ 错** |
+
+## 模块
+
+![模块依赖图](docs/img/modules.svg)
+
+| 模块 | 职责 |
+|---|---|
+| `config.py` | 默认值 < JSON < 环境变量 < 命令行；键名校验 |
+| `geometry.py` | bbox 坐标系换算、等比缩放（纯计算） |
+| `paths.py` | 发现输入页、准备输出目录、命名裁图 |
+| `render.py` | PDF → 逐页 PNG（长边统一、断点续跑） |
+| `latex.py` | 去定界符、装配 standalone 文档、xelatex → PNG |
+| `jev.py` | 打分客户端：5xx 退避重试、4xx 立刻失败 |
+| `ocr.py` | 解析块级 JSON，抽出公式块 |
+| `qc.py` | 编排裁图 → 渲染 → 打分 → 四类判定；单块失败不中断 |
+| `merge.py` | 逐页 Markdown → 一本成稿（保留下游格式） |
+| `report.py` | CSV 写出/读回、Markdown 报告分节 |
+| `experiment.py` | 三臂对比、标签指标、阈值扫描 |
+| `cli.py` | 入口：三个子命令，只做装配与打印（无业务逻辑） |
+
+依赖方向与设计取舍见 [docs/架构.md](docs/架构.md)。
 
 ## 配置
 
@@ -92,7 +97,7 @@ $env:PMOCR_JEV_URL = 'http://127.0.0.1:18499'
 $env:PMOCR_THRESHOLD = '0.6'
 ```
 
-源码里没有任何绝对路径、端口或模型名；换机器只改配置。
+源码里没有任何绝对路径、端口或模型名；换机器只改配置。`config/config.json` 已被 `.gitignore` 排除。
 
 ## 测试
 
@@ -100,13 +105,11 @@ $env:PMOCR_THRESHOLD = '0.6'
 python -m unittest discover -s tests -t .
 ```
 
-93 个用例，默认不联网、不占 GPU、不依赖真 TeX（真编译用例需 `PMOCR_TEST_TEX=1`）。
-覆盖：配置优先级与校验、bbox 换算、定界符清洗、渲染失败与超时、Jev 重试/不重试/返回体异常、
-四类判定分流、报告分节、标签指标与阈值扫描、重复标签防护、入口退出码与参数覆盖。
+120 个用例，默认不联网、不占 GPU、不依赖真 TeX（真编译用例需 `PMOCR_TEST_TEX=1`）。
+覆盖：配置优先级与校验、bbox 换算、定界符清洗、渲染失败/超时/0 字节 PDF、Jev 重试与不重试、
+四类判定分流、报告分节、标签指标与阈值扫描、重复标签防护、PDF 渲染与成稿合并、入口退出码。
 
-测试临时目录默认在系统 temp；受限环境可用 `PMOCR_TEST_TMP=<目录>` 指定。
-
-真服务冒烟（真 xelatex + 真 Jev）：单块得分 **0.9915 → OK**。
+测试临时目录默认系统 temp，`PMOCR_TEST_TMP=<目录>` 可覆盖。
 
 ## 已知边界
 
@@ -116,6 +119,7 @@ python -m unittest discover -s tests -t .
 - **表格**转成 HTML table，不是 Markdown 管道表。
 - **Jev 500** 是技术性失败不是识别错误，但失败率分书差异极大（0% ~ 40%），会直接影响人工成本。
 - **阈值 0.6 未校准**：CHECK 率在四本书里从 0.9% 到 27%，要定阈值得先有标签。
+- **成稿不做自动修稿**：复核只给信号，改由人做。
 
 ## 与 GTM 全量 OCR 的关系
 
@@ -126,9 +130,9 @@ python -m unittest discover -s tests -t .
 
 ```
 pmocr/              复核包（见上表）
-scripts/            ocr_parse.ps1（第一步，参数化）
+scripts/            ocr_parse.ps1（整页解析，参数化）
 config/             config.example.json
-docs/               架构 / 流程 / 对照组实验
+docs/               架构 / 流程 / 对照组实验 / img（示意图）
 experiments/        标签、样例 CSV、脚本生成的实验报告
 tests/              单元测试
 ```
