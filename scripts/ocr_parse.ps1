@@ -5,7 +5,7 @@
 # 脚本里不再出现与某台机器绑死的绝对路径。
 #
 # 用法:
-#   .\scripts\ocr_parse.ps1 -InputPath 'C:\path\to\pages' -Out 'D:\work\out'
+#   .\scripts\ocr_parse.ps1 -InputPath .\pages -Out .\out
 #   .\scripts\ocr_parse.ps1 -InputPath .\scan -Config .\config\config.json
 #
 # 注意: 沙箱里不要用 `& $Py @args` 直接捕获子进程输出（会撞 \\.\pipe\ 拒绝），
@@ -39,7 +39,7 @@ $ErrorActionPreference = 'Stop'
 $RepoRoot = Split-Path $PSScriptRoot -Parent
 $ConfigPath = if ($Config) { $Config } else { Join-Path $RepoRoot 'config\config.json' }
 $Defaults = @{
-    minicpm_root             = '<OCR_ROOT>'
+    minicpm_root             = ''  # 由 -MinicpmRoot / PMOCR_MINICPM_ROOT / config 提供
     server_url               = 'http://127.0.0.1:18499'
     model                    = 'minicpm-ocr'
     # 11-24 实测（RTX 5060 Laptop 8GB）定稿：workers=2 + np=2 → 42 块/分；
@@ -79,7 +79,10 @@ function Get-Setting {
 function Resolve-Paths {
     param([hashtable]$Settings)
 
-    $root = if ($MinicpmRoot) { $MinicpmRoot } else { $Settings['minicpm_root'] }
+    $root = if ($MinicpmRoot) { $MinicpmRoot } else { [string](Get-Setting $Settings 'minicpm_root') }
+    if (-not $root) {
+        throw '[config] 未设置 minicpm_root：请用 -MinicpmRoot、环境变量 PMOCR_MINICPM_ROOT 或 config/config.json 指定模型/环境根目录'
+    }
     $root = [System.IO.Path]::GetFullPath($root)
 
     if ($PythonExe) { $python = $PythonExe }
@@ -281,3 +284,5 @@ Invoke-Sdk -Paths $paths -Output $outputDir -Crops:$SaveCrops
 Write-Host ''
 Write-Host "完成。Markdown: $outputDir"
 Write-Host "块级数据: $($paths.Runs) 下最新目录的 pages_json\*.json"
+
+
