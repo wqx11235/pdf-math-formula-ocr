@@ -38,6 +38,9 @@ class Config:
     # --- 图像与渲染 ---
     max_image_side: int = 1600
     retry_max_side: int = 800
+    qc_workers: int = 4
+    render_cache: bool = True
+    render_cache_dir: str = ""
     crop_padding: int = 8
     render_dpi: int = 300
     render_timeout: float = 120.0
@@ -96,7 +99,7 @@ class Config:
     def validate(self) -> None:
         if not 0.0 < self.threshold < 1.0:
             raise ConfigError("threshold 必须在 (0, 1) 之间，当前 %r" % self.threshold)
-        for name in ("max_image_side", "render_dpi", "jev_retries", "page_edge", "retry_max_side"):
+        for name in ("max_image_side", "render_dpi", "jev_retries", "page_edge", "retry_max_side", "qc_workers"):
             if getattr(self, name) <= 0:
                 raise ConfigError("%s 必须为正整数，当前 %r" % (name, getattr(self, name)))
         if self.crop_padding < 0:
@@ -114,6 +117,10 @@ class Config:
 
 def _coerce(name: str, value: Any, current: Config) -> Any:
     target = type(getattr(current, name))
+    if target is bool:
+        if isinstance(value, str):
+            return value.strip().lower() in ("1", "true", "yes", "on")
+        return bool(value)
     if target is str:
         return str(value)
     if target is int:
@@ -127,3 +134,5 @@ def _coerce(name: str, value: Any, current: Config) -> Any:
         except (TypeError, ValueError) as exc:
             raise ConfigError("%s 需要数字，收到 %r" % (name, value)) from exc
     raise ConfigError("不支持的配置类型: %s" % name)  # pragma: no cover
+
+

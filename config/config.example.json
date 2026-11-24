@@ -19,5 +19,8 @@
   "num_parallel": 2,
   "max_loaded_models": 1,
   "service_script": "",
-  "retry_max_side": 800
+  "retry_max_side": 800,
+  "qc_workers": 4,
+  "render_cache": true,
+  "render_cache_dir": ""
 }

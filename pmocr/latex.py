@@ -6,10 +6,13 @@
 
 from __future__ import annotations
 
+import hashlib
 import os
 import re
+import shutil
 import subprocess
 import sys
+import tempfile
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Callable
@@ -78,6 +81,14 @@ def render(
     pdf_path = workdir / (name + ".pdf")
     png_path = workdir / (name + ".png")
     tex_path.write_text(build_document(tex), encoding="utf-8")
+
+    cache_dir = _cache_dir(cfg)
+    cache_file = cache_dir / (_tex_key(tex, cfg) + ".png") if cache_dir else None
+    if cache_file is not None and cache_file.is_file() and cache_file.stat().st_size > 0:
+        # 同一段 LaTeX 之前渲染过：直接复用，省掉一次 xelatex（约 1.2s）
+        shutil.copyfile(cache_file, png_path)
+        return RenderResult(png_path)
+
     # 上一次同名渲染的产物必须清掉，否则 xelatex 失败时会把旧 PDF 当新结果
     for stale in (pdf_path, png_path):
         stale.unlink(missing_ok=True)
@@ -105,7 +116,60 @@ def render(
         _pdf_to_png(pdf_path, png_path, cfg.render_dpi)
     except Exception as exc:  # PyMuPDF 对个别 PDF 会抛各类异常
         return RenderResult(None, "PDF 转 PNG 失败: %s" % exc)
+    if cache_file is not None:
+        try:
+            shutil.copyfile(png_path, cache_file)
+        except OSError:
+            pass
     return RenderResult(png_path)
+
+
+_CACHE_CHOICES: dict[tuple[bool, str], Path | None] = {}
+
+
+def _cache_dir(cfg: Config) -> Path | None:
+    """渲染缓存目录：同一段 LaTeX 只编译一次，做 A/B 时省掉重复渲染。
+
+    候选目录依次尝试，第一个能写文件的就用（受限进程写 AppData 会被拒）。
+    结果按进程缓存：并发渲染时若每次都探测，探针文件会互相踩踏，探测失败就退回「无缓存」。
+    """
+    key = (cfg.render_cache, cfg.render_cache_dir)
+    if key in _CACHE_CHOICES:
+        return _CACHE_CHOICES[key]
+    if not cfg.render_cache:
+        _CACHE_CHOICES[key] = None
+        return None
+    candidates = []
+    if cfg.render_cache_dir:
+        candidates.append(Path(cfg.render_cache_dir))
+    else:
+        local = os.environ.get("LOCALAPPDATA")
+        if local:
+            candidates.append(Path(local) / "pmocr" / "render-cache")
+        try:
+            tmp = Path(tempfile.gettempdir())
+            if tmp.is_absolute():
+                candidates.append(tmp / "pmocr" / "render-cache")
+        except (FileNotFoundError, OSError):
+            pass
+    chosen: Path | None = None
+    for base in candidates:
+        try:
+            base.mkdir(parents=True, exist_ok=True)
+            probe = base / (".probe-%d" % os.getpid())
+            probe.write_text("ok", encoding="utf-8")
+            probe.unlink()
+            chosen = base
+            break
+        except OSError:
+            continue
+    _CACHE_CHOICES[key] = chosen
+    return chosen
+
+
+def _tex_key(tex: str, cfg: Config) -> str:
+    payload = "%s|%d|v1" % (tex, cfg.render_dpi)
+    return hashlib.sha256(payload.encode("utf-8")).hexdigest()[:32]
 
 
 def _tex_env(cfg: Config, workdir: Path) -> dict[str, str]:
@@ -156,3 +220,4 @@ __all__ = [
 
 if __name__ == "__main__":  # pragma: no cover
     sys.exit("latex 模块不单独运行，请用 python -m pmocr.cli")
+

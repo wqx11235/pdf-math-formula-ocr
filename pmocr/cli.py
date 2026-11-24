@@ -64,6 +64,8 @@ def _add_qc_overrides(parser) -> None:
     parser.add_argument("--jev-model", help="Jev 模型名，默认取配置")
     parser.add_argument("--max-image-side", type=int, help="送打分的最长边，默认取配置")
     parser.add_argument("--tex-bin-dir", help="xelatex 所在目录，默认用 PATH")
+    parser.add_argument("--qc-workers", type=int, help="复核并发数，默认取配置（4）")
+    parser.add_argument("--no-render-cache", action="store_true", help="关闭渲染缓存")
 
 
 def _add_render(sub) -> None:
@@ -154,6 +156,8 @@ def _qc_overrides(args: argparse.Namespace) -> dict[str, object]:
         "jev_model": args.jev_model,
         "max_image_side": args.max_image_side,
         "tex_bin_dir": args.tex_bin_dir,
+        "qc_workers": getattr(args, "qc_workers", None),
+        "render_cache": False if getattr(args, "no_render_cache", False) else None,
     }
 
 
@@ -174,3 +178,4 @@ def _print_qc_summary(summary: qc.RunSummary, layout: OutputLayout) -> None:
 
 if __name__ == "__main__":  # pragma: no cover
     sys.exit(main())
+

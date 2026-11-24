@@ -50,7 +50,7 @@ class StripTests(unittest.TestCase):
 class RenderTests(unittest.TestCase):
     def setUp(self) -> None:
         self.tmp = make_tmp()
-        self.cfg = Config.load(None, environ={})
+        self.cfg = Config.load(None, overrides={"render_cache": False}, environ={})
 
     def test_missing_pdf_is_reported_not_raised(self) -> None:
         result = render("x^2", self.tmp, "b1", self.cfg, runner=lambda *a, **k: _completed(1, "! Undefined control sequence"))
@@ -103,7 +103,7 @@ class RenderTests(unittest.TestCase):
             seen.update(kwargs)
             return _completed(1)
 
-        cfg = Config.load(None, overrides={"tex_bin_dir": "C:/tex/bin"}, environ={})
+        cfg = Config.load(None, overrides={"tex_bin_dir": "C:/tex/bin", "render_cache": False}, environ={})
         render("x^2", self.tmp, "b5", cfg, runner=capture)
         self.assertTrue(seen["env"]["PATH"].startswith("C:/tex/bin" + os.pathsep))
 
@@ -127,6 +127,26 @@ class RenderTests(unittest.TestCase):
         result = render("x^2", self.tmp, "b7", self.cfg, runner=broken)
         self.assertFalse(result.ok)
 
+    def test_cache_hit_skips_runner(self) -> None:
+        cfg = Config.load(None, overrides={"render_cache": True,
+                                           "render_cache_dir": str(self.tmp / "cache")}, environ={})
+        calls: list[int] = []
+
+        def fake_runner(*args, **kwargs):
+            calls.append(1)
+            (self.tmp / "b9.pdf").write_bytes(b"%PDF-1.4")
+            return _completed(0)
+
+        def fake_convert(pdf, png, dpi):
+            Path(png).write_bytes(b"png")
+
+        with mock.patch.object(latex, "_pdf_to_png", side_effect=fake_convert):
+            first = render("x^2", self.tmp, "b9", cfg, runner=fake_runner)
+            second = render("x^2", self.tmp / "second", "b9", cfg, runner=fake_runner)
+        self.assertTrue(first.ok)
+        self.assertTrue(second.ok)
+        self.assertEqual(len(calls), 1, "第二次应从缓存取，不再调用 xelatex")
+
     @unittest.skipUnless(os.environ.get("PMOCR_TEST_TEX") and tex_available(), "需要真 TeX 环境（PMOCR_TEST_TEX=1）")
     def test_real_xelatex(self) -> None:
         cfg = Config.load(None, environ={})
@@ -136,3 +156,5 @@ class RenderTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
