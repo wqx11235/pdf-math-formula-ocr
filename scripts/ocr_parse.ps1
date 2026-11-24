@@ -26,6 +26,10 @@ param(
     [string]$ServerUrl = $env:PMOCR_JEV_URL,
     [string]$Model = $env:PMOCR_OCR_MODEL,
     [string]$LayoutModel,
+    [int]$Workers = 0,
+    [int]$RequestTimeoutSec = 0,
+    [int]$NumParallel = 0,
+    [string]$ServiceScript = $env:PMOCR_SERVICE_SCRIPT,
     [switch]$SaveCrops
 )
 
@@ -35,9 +39,19 @@ $ErrorActionPreference = 'Stop'
 $RepoRoot = Split-Path $PSScriptRoot -Parent
 $ConfigPath = if ($Config) { $Config } else { Join-Path $RepoRoot 'config\config.json' }
 $Defaults = @{
-    minicpm_root = '<OCR_ROOT>'
-    server_url   = 'http://127.0.0.1:18499'
-    model        = 'minicpm-ocr'
+    minicpm_root             = '<OCR_ROOT>'
+    server_url               = 'http://127.0.0.1:18499'
+    model                    = 'minicpm-ocr'
+    # 11-24 实测（RTX 5060 Laptop 8GB）定稿：workers=2 + np=2 → 42 块/分；
+    # workers 默认 32 会让每页 125MB 的图解撑到 4GB 峰值，直接 0xC0000005；
+    # 请求超时 300s 会截断扫描件长正文块，整批 500。别再调高并发。
+    workers                  = '2'
+    request_timeout_sec      = '900'
+    request_ready_timeout_sec = '1800'
+    num_parallel             = '2'
+    max_loaded_models        = '1'
+    ollama_keep_alive        = '30m'
+    service_script           = ''
 }
 
 function Read-Settings {
@@ -88,18 +102,48 @@ function Resolve-Paths {
     elseif (Get-Setting $Settings 'model') { $model = Get-Setting $Settings 'model' }
     else { $model = $Defaults['model'] }
 
+    $workers = if ($Workers -gt 0) { $Workers }
+    elseif (Get-Setting $Settings 'workers') { [int](Get-Setting $Settings 'workers') }
+    else { [int]$Defaults['workers'] }
+
+    $timeout = if ($RequestTimeoutSec -gt 0) { $RequestTimeoutSec }
+    elseif (Get-Setting $Settings 'request_timeout_sec') { [int](Get-Setting $Settings 'request_timeout_sec') }
+    else { [int]$Defaults['request_timeout_sec'] }
+
+    $readyTimeout = if (Get-Setting $Settings 'request_ready_timeout_sec') { [int](Get-Setting $Settings 'request_ready_timeout_sec') }
+    else { [int]$Defaults['request_ready_timeout_sec'] }
+
+    $parallel = if ($NumParallel -gt 0) { $NumParallel }
+    elseif (Get-Setting $Settings 'num_parallel') { [int](Get-Setting $Settings 'num_parallel') }
+    else { [int]$Defaults['num_parallel'] }
+
+    $maxLoaded = if (Get-Setting $Settings 'max_loaded_models') { [int](Get-Setting $Settings 'max_loaded_models') }
+    else { [int]$Defaults['max_loaded_models'] }
+
+    $keepAlive = if (Get-Setting $Settings 'ollama_keep_alive') { [string](Get-Setting $Settings 'ollama_keep_alive') }
+    else { [string]$Defaults['ollama_keep_alive'] }
+
+    if (-not $ServiceScript) { $ServiceScript = [string](Get-Setting $Settings 'service_script') }
+
     return @{
-        Root   = $root
-        Python = [System.IO.Path]::GetFullPath($python)
-        Ollama = [System.IO.Path]::GetFullPath($ollama)
-        Layout = [System.IO.Path]::GetFullPath($layout)
-        Server = $server.TrimEnd('/')
-        Model  = $model
-        Models = Join-Path $root 'ollama-models'
-        Home   = Join-Path $root 'home'
-        Runs   = Join-Path $root 'runs'
-        Tmp    = Join-Path $root 'vtmp'
-        Logs   = Join-Path $root 'logs'
+        Root          = $root
+        Python        = [System.IO.Path]::GetFullPath($python)
+        Ollama        = [System.IO.Path]::GetFullPath($ollama)
+        Layout        = [System.IO.Path]::GetFullPath($layout)
+        Server        = $server.TrimEnd('/')
+        Model         = $model
+        Workers       = $workers
+        Timeout       = $timeout
+        ReadyTimeout  = $readyTimeout
+        Parallel      = $parallel
+        MaxLoaded     = $maxLoaded
+        KeepAlive     = $keepAlive
+        ServiceScript = $ServiceScript
+        Models        = Join-Path $root 'ollama-models'
+        Home          = Join-Path $root 'home'
+        Runs          = Join-Path $root 'runs'
+        Tmp           = Join-Path $root 'vtmp'
+        Logs          = Join-Path $root 'logs'
     }
 }
 
@@ -153,13 +197,24 @@ function Start-ServiceIfNeeded {
     }
 
     New-Item -ItemType Directory -Force -Path $Paths.Home, $Paths.Logs | Out-Null
-    Write-Host "[ollama] 启动 $($Paths.Server)"
-    $service = Start-WithEnv -File $Paths.Ollama -Arguments @('serve') -Environment @{
-        USERPROFILE       = $Paths.Home
-        OLLAMA_HOST       = ($Paths.Server -replace '^https?://', '')
-        OLLAMA_MODELS     = $Paths.Models
-        OLLAMA_KEEP_ALIVE = '30m'
-    } -Stdout (Join-Path $Paths.Logs 'ollama.out.log') -Stderr (Join-Path $Paths.Logs 'ollama.err.log')
+    Write-Host "[ollama] 启动 $($Paths.Server)（np=$($Paths.Parallel), workers=$($Paths.Workers)）"
+
+    if ($Paths.ServiceScript -and (Test-Path -LiteralPath $Paths.ServiceScript)) {
+        # 生产机上由 serve_ollama.py 托管（内含 np=2 等定稿环境变量，且能长期守护）
+        $pythonw = Join-Path (Split-Path $Paths.Python) 'pythonw.exe'
+        if (-not (Test-Path -LiteralPath $pythonw)) { $pythonw = $Paths.Python }
+        Write-Host "[ollama] 托管脚本：$($Paths.ServiceScript)"
+        $service = Start-Process -FilePath $pythonw -ArgumentList @('-u', $Paths.ServiceScript) -PassThru -WindowStyle Hidden
+    } else {
+        $service = Start-WithEnv -File $Paths.Ollama -Arguments @('serve') -Environment @{
+            USERPROFILE             = $Paths.Home
+            OLLAMA_HOST             = ($Paths.Server -replace '^https?://', '')
+            OLLAMA_MODELS           = $Paths.Models
+            OLLAMA_KEEP_ALIVE       = $Paths.KeepAlive
+            OLLAMA_NUM_PARALLEL     = "$($Paths.Parallel)"
+            OLLAMA_MAX_LOADED_MODELS = "$($Paths.MaxLoaded)"
+        } -Stdout (Join-Path $Paths.Logs 'ollama.out.log') -Stderr (Join-Path $Paths.Logs 'ollama.err.log')
+    }
 
     for ($i = 1; $i -le 30; $i++) {
         Start-Sleep -Seconds 1
@@ -185,7 +240,10 @@ function Invoke-Sdk {
         '--backend', 'ollama',
         '--server-url', $Paths.Server,
         '--model', $Paths.Model,
+        '--workers', "$($Paths.Workers)",
         '--set', 'upright.enabled=false',
+        '--set', "engine.request_timeout_sec=$($Paths.Timeout)",
+        '--set', "engine.request_ready_timeout_sec=$($Paths.ReadyTimeout)",
         '--set', "run.run_root=$($Paths.Runs)",
         '-o', $Output
     )

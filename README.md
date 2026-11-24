@@ -113,6 +113,10 @@ python -m pmocr.experiment --csv .\work\qc\formula_qc.csv --md 报告.md
 
 依赖方向与设计取舍见 [docs/架构.md](docs/架构.md)。
 
+## 性能与硬件
+
+不同显卡、不同并发参数下能跑多快、哪些配置会崩，见 [docs/性能与硬件.md](docs/性能与硬件.md)（含本机实测三组参数与换卡预测）。
+
 ## 配置
 
 `config/config.example.json` 是全部可调项，也可用环境变量覆盖（`PMOCR_` + 大写字段名）：
@@ -167,5 +171,6 @@ tests/              单元测试
 ## License
 
 MIT
+
 
 

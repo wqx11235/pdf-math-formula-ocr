@@ -12,6 +12,11 @@
   "page_edge": 8157,
   "tex_bin_dir": "D:\\Texlive\\texlive\\2025\\bin\\windows",
   "minicpm_root": "D:\\deepseek_harness\\.minicpm-ocr",
-  "temp_dir": ""
+  "temp_dir": "",
+  "workers": 2,
+  "request_timeout_sec": 900,
+  "request_ready_timeout_sec": 1800,
+  "num_parallel": 2,
+  "max_loaded_models": 1,
+  "service_script": ""
 }
-
