@@ -1,6 +1,6 @@
 # 实验报告（脚本生成，勿手改）
 
-> 由 `python -m pmocr.experiment` 生成。解读见 `docs/对照组实验.md`。
+> 由 `python -m pmocr.experiment` 生成。解读见 `docs/03-对照实验.md`。
 > 复现：
 >
 > ```
@@ -126,4 +126,5 @@
 | 0.95 | 29 | 120 | 54.1% | 0 | 0 | 0 |
 
 阈值只影响 CHECK 与 OK 的切分；RENDER_FAIL / SCORE_ERR 不受阈值影响。
+
 
