@@ -18,5 +18,6 @@
   "request_ready_timeout_sec": 1800,
   "num_parallel": 2,
   "max_loaded_models": 1,
-  "service_script": ""
+  "service_script": "",
+  "retry_max_side": 800
 }

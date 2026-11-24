@@ -37,6 +37,7 @@ class Config:
 
     # --- 图像与渲染 ---
     max_image_side: int = 1600
+    retry_max_side: int = 800
     crop_padding: int = 8
     render_dpi: int = 300
     render_timeout: float = 120.0
@@ -95,7 +96,7 @@ class Config:
     def validate(self) -> None:
         if not 0.0 < self.threshold < 1.0:
             raise ConfigError("threshold 必须在 (0, 1) 之间，当前 %r" % self.threshold)
-        for name in ("max_image_side", "render_dpi", "jev_retries", "page_edge"):
+        for name in ("max_image_side", "render_dpi", "jev_retries", "page_edge", "retry_max_side"):
             if getattr(self, name) <= 0:
                 raise ConfigError("%s 必须为正整数，当前 %r" % (name, getattr(self, name)))
         if self.crop_padding < 0:

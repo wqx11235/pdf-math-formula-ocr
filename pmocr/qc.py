@@ -131,11 +131,47 @@ def evaluate_block(
     try:
         score = client.score(region, block.tex, candidate)
     except JevError as exc:
-        return _result(block, VERDICT_SCORE_ERR, note=str(exc)[:200])
-    # 判定用落盘值（4 位小数），否则 CSV 里会出现「score=0.6 却是 CHECK」的自相矛盾
+        # jev 对过宽/多行 array 的图会 500；原样重试救不回来。
+        # 实测把两张图降到 800px 重发，12 个 SCORE_ERR 里能救回 9 个。
+        score = _retry_downscaled(region, block.tex, candidate, layout, cfg, client)
+        if score is None:
+            return _result(block, VERDICT_SCORE_ERR, note=str(exc)[:200])
+        # 判定用落盘值（4 位小数），否则 CSV 里会出现「score=0.6 却是 CHECK」的自相矛盾
     stored = round(score, 4)
     verdict = VERDICT_OK if stored >= cfg.threshold else VERDICT_CHECK
     return _result(block, verdict, score=stored)
+
+
+def _retry_downscaled(
+    region: Path,
+    tex: str,
+    candidate: Path,
+    layout: OutputLayout,
+    cfg: Config,
+    client,
+) -> float | None:
+    """把两张图等比缩到 retry_max_side 再打一次分；仍失败返回 None。"""
+    from PIL import Image
+
+    def smaller(source: Path, name: str) -> Path:
+        target = layout.render_dir / name
+        with Image.open(source) as img:
+            img = img.convert("RGB")
+            scale = min(1.0, cfg.retry_max_side / max(img.width, img.height))
+            if scale < 1.0:
+                img = img.resize(
+                    (max(1, int(img.width * scale)), max(1, int(img.height * scale))),
+                    Image.LANCZOS,
+                )
+            img.save(target, format="JPEG", quality=92)
+        return target
+
+    small_region = smaller(region, region.stem + "_retry.jpg")
+    small_candidate = smaller(candidate, candidate.stem + "_retry.jpg")
+    try:
+        return client.score(small_region, tex, small_candidate)
+    except JevError:
+        return None
 
 
 def _result(

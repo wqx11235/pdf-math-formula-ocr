@@ -18,15 +18,17 @@ from tests.helpers import fake_renderer, formula_block, make_page_json, make_pag
 
 
 class FakeClient:
-    def __init__(self, score: float = 0.9, error: Exception | None = None) -> None:
+    def __init__(self, score: float = 0.9, error: Exception | None = None, fail_times: int = 0) -> None:
         self.score_value = score
         self.error = error
+        self.fail_times = fail_times
         self.calls: list[tuple] = []
 
     def score(self, region, tex, candidate):
         self.calls.append((region, tex, candidate))
-        if self.error:
-            raise self.error
+        if self.fail_times > 0:
+            self.fail_times -= 1
+            raise self.error or JevError("HTTP 500")
         return self.score_value
 
 
@@ -78,11 +80,34 @@ class EvaluateBlockTests(unittest.TestCase):
         result = qc.evaluate_block(
             block=self.block, page_image=self.image, page_size=qc.Size(400, 600),
             source_size=qc.Size(400, 600), layout=self.layout, cfg=self.cfg,
-            client=FakeClient(error=JevError("HTTP 500")),
+            client=FakeClient(error=JevError("HTTP 500"), fail_times=99),
             renderer=fake_renderer(self.tmp / "r.png"),
         )
         self.assertEqual(result.verdict, qc.VERDICT_SCORE_ERR)
         self.assertIn("500", result.note)
+
+    def test_downscale_retry_recovers_from_500(self) -> None:
+        client = FakeClient(0.88, error=JevError("HTTP 500"), fail_times=1)
+        result = qc.evaluate_block(
+            block=self.block, page_image=self.image, page_size=qc.Size(400, 600),
+            source_size=qc.Size(400, 600), layout=self.layout, cfg=self.cfg,
+            client=client, renderer=fake_renderer(self.tmp / "r.png"),
+        )
+        self.assertEqual(result.verdict, qc.VERDICT_OK)
+        self.assertAlmostEqual(result.score, 0.88)
+        self.assertEqual(len(client.calls), 2)
+        second_region = client.calls[1][0]
+        self.assertTrue(second_region.name.endswith("_retry.jpg"))
+
+    def test_retry_that_still_fails_is_score_err(self) -> None:
+        client = FakeClient(error=JevError("HTTP 500"), fail_times=5)
+        result = qc.evaluate_block(
+            block=self.block, page_image=self.image, page_size=qc.Size(400, 600),
+            source_size=qc.Size(400, 600), layout=self.layout, cfg=self.cfg,
+            client=client, renderer=fake_renderer(self.tmp / "r.png"),
+        )
+        self.assertEqual(result.verdict, qc.VERDICT_SCORE_ERR)
+        self.assertEqual(len(client.calls), 2)
 
     def test_crop_is_written(self) -> None:
         qc.evaluate_block(
@@ -140,3 +165,4 @@ class RunTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
