@@ -11,6 +11,7 @@ import sys
 from pathlib import Path
 from typing import Sequence
 
+from . import gate as gate_mod
 from . import merge, pipeline, qc, render, report
 from .config import Config
 from .errors import PmocrError
@@ -66,6 +67,7 @@ def _add_qc_overrides(parser) -> None:
     parser.add_argument("--tex-bin-dir", help="xelatex 所在目录，默认用 PATH")
     parser.add_argument("--qc-workers", type=int, help="复核并发数，默认取配置（4）")
     parser.add_argument("--no-render-cache", action="store_true", help="关闭渲染缓存")
+    parser.add_argument("--gate", help="选择性验证门 JSON（gate.save 产物）；给了才启用")
 
 
 def _add_render(sub) -> None:
@@ -121,7 +123,8 @@ def _run_book(args: argparse.Namespace) -> int:
 def _run_qc(args: argparse.Namespace) -> int:
     cfg = Config.load(args.config, overrides=_qc_overrides(args))
     layout = prepare_outputs(args.out)
-    summary = qc.run(discover_pages(args.pages, args.images), layout, cfg)
+    gate = gate_mod.load(args.gate) if getattr(args, "gate", None) else None
+    summary = qc.run(discover_pages(args.pages, args.images), layout, cfg, gate=gate)
     report.write_csv(summary.results, layout.csv_path)
     report.write_markdown(summary.results, layout.markdown_path, cfg.threshold)
     _print_qc_summary(summary, layout)
@@ -178,4 +181,5 @@ def _print_qc_summary(summary: qc.RunSummary, layout: OutputLayout) -> None:
 
 if __name__ == "__main__":  # pragma: no cover
     sys.exit(main())
+
 

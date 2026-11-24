@@ -20,6 +20,7 @@ from typing import Callable, Sequence
 
 from . import latex
 from .config import Config
+from .gate import Gate
 from .errors import JevError, PmocrError
 from .geometry import Size, fit_max_side, scale_bbox
 from .jev import JevClient
@@ -67,6 +68,7 @@ def run(
     *,
     client: JevClient | None = None,
     renderer: Callable[..., latex.RenderResult] = latex.render,
+    gate: Gate | None = None,
     log: Callable[[str], None] | None = None,
 ) -> RunSummary:
     """逐页逐块复核。单块失败只记账，不中断整批。
@@ -106,11 +108,11 @@ def run(
 
     if cfg.qc_workers <= 1:
         for index, block, region in pending:
-            slots[index] = evaluate_region(block, region, layout, cfg, jev, renderer)
+            slots[index] = evaluate_region(block, region, layout, cfg, jev, renderer, gate)
     else:
         with ThreadPoolExecutor(max_workers=cfg.qc_workers) as pool:
             futures = {
-                index: pool.submit(evaluate_region, block, region, layout, cfg, jev, renderer)
+                index: pool.submit(evaluate_region, block, region, layout, cfg, jev, renderer, gate)
                 for index, block, region in pending
             }
             for index, future in futures.items():
@@ -126,11 +128,16 @@ def evaluate_region(
     cfg: Config,
     client,
     renderer: Callable[..., latex.RenderResult] = latex.render,
+    gate: Gate | None = None,
 ) -> BlockResult:
     """块已裁好：渲染 → 打分 → 判定。渲染与打分都可以并发调用。"""
     rendered = renderer(block.tex, layout.render_dir, _render_name(block), cfg)
     if not rendered.ok:
         return _result(block, VERDICT_RENDER_FAIL, note=rendered.error)
+
+    if gate is not None and gate.skips(block.tex):
+        # 校准过的门认为这块足够安全：不送 jev，直接放行（note 里留痕）
+        return _result(block, VERDICT_OK, note="gate-skip skips>=%.2f" % gate.cutoff)
 
     candidate = _shrink(rendered.png, cfg.max_image_side)
     try:
@@ -268,5 +275,6 @@ def _open_image(path: Path | None):
     image = Image.open(path)
     image.load()
     return image
+
 
 
