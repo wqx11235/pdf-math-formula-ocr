@@ -134,7 +134,7 @@ $env:PMOCR_THRESHOLD = '0.6'
 python -m unittest discover -s tests -t .
 ```
 
-143 个用例，默认不联网、不占 GPU、不依赖真 TeX（真编译用例需 `PMOCR_TEST_TEX=1`）。
+145 个用例，默认不联网、不占 GPU、不依赖真 TeX（真编译用例需 `PMOCR_TEST_TEX=1`）。
 覆盖：配置优先级与校验、bbox 换算、定界符清洗、渲染失败/超时/0 字节 PDF、Jev 重试与不重试、
 四类判定分流、报告分节、标签指标与阈值扫描、重复标签防护、PDF 渲染与成稿合并、入口退出码。
 
@@ -171,6 +171,7 @@ tests/              单元测试
 ## License
 
 MIT
+
 
 
 
